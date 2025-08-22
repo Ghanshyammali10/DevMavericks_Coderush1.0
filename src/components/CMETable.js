@@ -8,16 +8,16 @@ function formatDate(dateString) {
   try {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return dateString; // Return original if invalid
-    
+
     // Use a fixed format that doesn't depend on locale settings
     // Format: MM/DD/YYYY, HH:MM:SS (24-hour format)
     const month = date.getMonth() + 1;
     const day = date.getDate();
     const year = date.getFullYear();
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    const seconds = date.getSeconds().toString().padStart(2, '0');
-    
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const seconds = date.getSeconds().toString().padStart(2, "0");
+
     return `${month}/${day}/${year}, ${hours}:${minutes}:${seconds}`;
   } catch (e) {
     return dateString; // Return original on error
@@ -67,6 +67,11 @@ export default function CMETable({
   const isFallbackData =
     error && (error.includes("fallback") || error.includes("Fallback"));
 
+  // Debug logging
+  console.log("CMETable received props:", { cmeEvents, loading, error });
+  console.log("CMETable processed events:", events);
+  console.log("Events length:", events.length);
+
   return (
     <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6">
       <div className="flex items-center justify-between mb-4">
@@ -112,7 +117,21 @@ export default function CMETable({
             {events.length === 0 && !loading && (
               <tr>
                 <td colSpan={7} className="px-3 py-4 text-center text-gray-400">
-                  No data
+                  <div className="space-y-2">
+                    <div>No CME data available</div>
+                    <div className="text-xs text-gray-500">
+                      Check API endpoints and simulator data
+                    </div>
+                    <button
+                      onClick={() => {
+                        console.log("Manual refresh triggered");
+                        if (onRefresh) onRefresh();
+                      }}
+                      className="px-3 py-1 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 text-xs rounded border border-blue-500/30"
+                    >
+                      Force Refresh
+                    </button>
+                  </div>
                 </td>
               </tr>
             )}

@@ -181,7 +181,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Airlines & Aviation */}
-            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6">
+            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6 hover:bg-black/30 hover:border-blue-400/30 hover:shadow-lg hover:shadow-blue-500/20 transform hover:scale-105 transition-all duration-300 ease-in-out group cursor-pointer">
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-gradient-to-r from-sky-400 to-blue-500 rounded-lg flex items-center justify-center mr-4">
                   <Plane className="w-6 h-6 text-white" />
@@ -190,71 +190,56 @@ export default function Home() {
                   <h3 className="text-xl font-semibold text-white">
                     Airlines & Aviation
                   </h3>
-                  <p className="text-gray-400 text-sm">
-                    Flight safety & navigation systems
-                  </p>
                 </div>
               </div>
 
-              <div className="space-y-3 mb-4">
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">✈</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Polar Route Risk Alerts
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Warns pilots to avoid high-latitude paths during solar
-                      radiation spikes
-                    </div>
+              <div className="space-y-4 mb-4">
+                <div>
+                  <div className="text-white font-semibold mb-1">Impact:</div>
+                  <div className="text-gray-300 text-sm">
+                    CMEs cause GPS navigation failures, radio communication
+                    blackouts, and increased radiation exposure for
+                    high-altitude flights, particularly on polar routes.
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">🛰</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      GPS Reliability Forecasts
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Predicts navigation accuracy for autopilot systems
-                    </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">Example:</div>
+                  <div className="text-gray-300 text-sm">
+                    The 2003 Halloween solar storms caused flight diversions and
+                    GPS disruptions affecting thousands of commercial flights.
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">☢</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Radiation Exposure Index
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Assesses crew/passenger exposure risk during high-altitude
-                      flights
-                    </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">Severity:</div>
+                  <div className="text-gray-300 text-sm">
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-500/20 text-red-300 border border-red-500/30">
+                      Severe
+                    </span>
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">📡</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Communication Disruption Alerts
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Flags potential radio blackout zones
-                    </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">
+                    Mitigation:
+                  </div>
+                  <div className="text-gray-300 text-sm">
+                    Reroute flights to lower latitudes, activate backup
+                    navigation systems, and implement radiation monitoring
+                    protocols for crew safety.
                   </div>
                 </div>
               </div>
 
               <Link
                 href="/api/aviation"
-                className="inline-flex items-center text-blue-400 hover:text-blue-300 text-sm font-medium"
+                className="inline-flex items-center text-blue-400 group-hover:text-blue-300 text-sm font-medium transition-colors duration-200"
               >
-                View Aviation API <ArrowRight className="w-4 h-4 ml-1" />
+                View Aviation API{" "}
+                <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-200" />
               </Link>
             </div>
 
             {/* Navy & Maritime Operations */}
-            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6">
+            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6 hover:bg-black/30 hover:border-cyan-400/30 hover:shadow-lg hover:shadow-cyan-500/20 transform hover:scale-105 transition-all duration-300 ease-in-out group cursor-pointer">
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-gradient-to-r from-cyan-400 to-teal-500 rounded-lg flex items-center justify-center mr-4">
                   <Ship className="w-6 h-6 text-white" />
@@ -263,59 +248,57 @@ export default function Home() {
                   <h3 className="text-xl font-semibold text-white">
                     Navy & Maritime Operations
                   </h3>
-                  <p className="text-gray-400 text-sm">
-                    Marine navigation & communications
-                  </p>
                 </div>
               </div>
 
-              <div className="space-y-3 mb-4">
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">📶</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Underwater Comms Risk Forecast
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Predicts CME-induced interference in sonar and underwater
-                      comms
-                    </div>
+              <div className="space-y-4 mb-4">
+                <div>
+                  <div className="text-white font-semibold mb-1">Impact:</div>
+                  <div className="text-gray-300 text-sm">
+                    CMEs disrupt GPS navigation systems, interfere with
+                    underwater communications, and can cause compass anomalies
+                    affecting maritime navigation and naval operations.
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">🧭</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Navigation Accuracy Alerts
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Helps reroute vessels during GPS degradation
-                    </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">Example:</div>
+                  <div className="text-gray-300 text-sm">
+                    During the 1989 Quebec blackout, geomagnetic storms affected
+                    compass readings and navigation systems on ships in the
+                    North Atlantic.
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">🌊</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Oceanic Weather-CME Fusion Models
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Combines CME data with marine forecasts for safer routing
-                    </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">Severity:</div>
+                  <div className="text-gray-300 text-sm">
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-500/20 text-yellow-300 border border-yellow-500/30">
+                      Moderate
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">
+                    Mitigation:
+                  </div>
+                  <div className="text-gray-300 text-sm">
+                    Switch to backup navigation systems, use celestial
+                    navigation, implement communication redundancy, and avoid
+                    high-latitude routes during storms.
                   </div>
                 </div>
               </div>
 
               <Link
                 href="/api/maritime"
-                className="inline-flex items-center text-cyan-400 hover:text-cyan-300 text-sm font-medium"
+                className="inline-flex items-center text-cyan-400 group-hover:text-cyan-300 text-sm font-medium transition-colors duration-200"
               >
-                View Maritime API <ArrowRight className="w-4 h-4 ml-1" />
+                View Maritime API{" "}
+                <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-200" />
               </Link>
             </div>
 
             {/* Agriculture & Farming */}
-            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6">
+            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6 hover:bg-black/30 hover:border-green-400/30 hover:shadow-lg hover:shadow-green-500/20 transform hover:scale-105 transition-all duration-300 ease-in-out group cursor-pointer">
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-gradient-to-r from-lime-400 to-green-500 rounded-lg flex items-center justify-center mr-4">
                   <Sprout className="w-6 h-6 text-white" />
@@ -324,59 +307,57 @@ export default function Home() {
                   <h3 className="text-xl font-semibold text-white">
                     Agriculture & Farming
                   </h3>
-                  <p className="text-gray-400 text-sm">
-                    Precision farming & crop management
-                  </p>
                 </div>
               </div>
 
-              <div className="space-y-3 mb-4">
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">🌦</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Rainfall Anomaly Predictor
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Uses CME data to forecast drought or flood risk
-                    </div>
+              <div className="space-y-4 mb-4">
+                <div>
+                  <div className="text-white font-semibold mb-1">Impact:</div>
+                  <div className="text-gray-300 text-sm">
+                    CMEs can disrupt GPS-guided farming equipment, affect
+                    weather patterns that impact crop growth, and potentially
+                    influence pest behavior through atmospheric changes.
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">🚜</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Machinery Disruption Alerts
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Warns of GPS or automation failures in smart tractors
-                    </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">Example:</div>
+                  <div className="text-gray-300 text-sm">
+                    Solar storms have been linked to unusual weather patterns
+                    affecting crop yields, and GPS failures have disrupted
+                    precision farming operations.
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">🐛</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Pest & Disease Risk Index
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Predicts outbreaks based on UV and temperature shifts
-                      post-CME
-                    </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">Severity:</div>
+                  <div className="text-gray-300 text-sm">
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-300 border border-green-500/30">
+                      Minor
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">
+                    Mitigation:
+                  </div>
+                  <div className="text-gray-300 text-sm">
+                    Implement manual farming backup procedures, monitor weather
+                    forecasts more closely, and maintain traditional farming
+                    knowledge for critical operations.
                   </div>
                 </div>
               </div>
 
               <Link
                 href="/api/agriculture"
-                className="inline-flex items-center text-green-400 hover:text-green-300 text-sm font-medium"
+                className="inline-flex items-center text-green-400 group-hover:text-green-300 text-sm font-medium transition-colors duration-200"
               >
-                View Agriculture API <ArrowRight className="w-4 h-4 ml-1" />
+                View Agriculture API{" "}
+                <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-200" />
               </Link>
             </div>
 
             {/* Healthcare & Emergency Services */}
-            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6">
+            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6 hover:bg-black/30 hover:border-pink-400/30 hover:shadow-lg hover:shadow-pink-500/20 transform hover:scale-105 transition-all duration-300 ease-in-out group cursor-pointer">
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-gradient-to-r from-rose-400 to-pink-500 rounded-lg flex items-center justify-center mr-4">
                   <Hospital className="w-6 h-6 text-white" />
@@ -385,58 +366,58 @@ export default function Home() {
                   <h3 className="text-xl font-semibold text-white">
                     Healthcare & Emergency Services
                   </h3>
-                  <p className="text-gray-400 text-sm">
-                    Medical systems & emergency response
-                  </p>
                 </div>
               </div>
 
-              <div className="space-y-3 mb-4">
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">⚡</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Medical Equipment Surge Alerts
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Warns hospitals of power instability risks
-                    </div>
+              <div className="space-y-4 mb-4">
+                <div>
+                  <div className="text-white font-semibold mb-1">Impact:</div>
+                  <div className="text-gray-300 text-sm">
+                    CMEs can cause power grid instability affecting medical
+                    equipment, disrupt GPS navigation for emergency vehicles,
+                    and potentially impact communication systems critical for
+                    patient care.
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">🚑</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Ambulance GPS Reliability Tracker
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Ensures accurate routing during geomagnetic storms
-                    </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">Example:</div>
+                  <div className="text-gray-300 text-sm">
+                    The 1989 Quebec blackout caused hospitals to rely on backup
+                    generators, and emergency services experienced GPS
+                    navigation issues during the geomagnetic storm.
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">🧯</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Emergency Response Optimization
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Prioritizes zones based on CME impact severity
-                    </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">Severity:</div>
+                  <div className="text-gray-300 text-sm">
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-500/20 text-red-300 border border-red-500/30">
+                      Severe
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">
+                    Mitigation:
+                  </div>
+                  <div className="text-gray-300 text-sm">
+                    Activate backup power systems, implement manual emergency
+                    protocols, use alternative navigation methods for
+                    ambulances, and maintain redundant communication systems.
                   </div>
                 </div>
               </div>
 
               <Link
                 href="/api/healthcare"
-                className="inline-flex items-center text-pink-400 hover:text-pink-300 text-sm font-medium"
+                className="inline-flex items-center text-pink-400 group-hover:text-pink-300 text-sm font-medium transition-colors duration-200"
               >
-                View Healthcare API <ArrowRight className="w-4 h-4 ml-1" />
+                View Healthcare API{" "}
+                <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-200" />
               </Link>
             </div>
 
             {/* Construction & Infrastructure */}
-            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6">
+            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6 hover:bg-black/30 hover:border-yellow-400/30 hover:shadow-lg hover:shadow-yellow-500/20 transform hover:scale-105 transition-all duration-300 ease-in-out group cursor-pointer">
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-lg flex items-center justify-center mr-4">
                   <span className="text-2xl">🏗</span>
@@ -445,58 +426,57 @@ export default function Home() {
                   <h3 className="text-xl font-semibold text-white">
                     Construction & Infrastructure
                   </h3>
-                  <p className="text-gray-400 text-sm">
-                    Building & infrastructure safety
-                  </p>
                 </div>
               </div>
 
-              <div className="space-y-3 mb-4">
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">🏗</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Precision Equipment Risk Alerts
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Flags days when GPS-guided cranes or survey tools may fail
-                    </div>
+              <div className="space-y-4 mb-4">
+                <div>
+                  <div className="text-white font-semibold mb-1">Impact:</div>
+                  <div className="text-gray-300 text-sm">
+                    CMEs can disrupt GPS-guided construction equipment, cause
+                    power surges affecting electrical systems, and interfere
+                    with precision surveying and positioning tools.
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">🔌</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Grid Surge Forecasts
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Predicts transformer overload risks at construction sites
-                    </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">Example:</div>
+                  <div className="text-gray-300 text-sm">
+                    GPS-guided bulldozers and cranes have experienced
+                    positioning errors during solar storms, leading to
+                    construction delays and safety concerns.
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">📦</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Logistics Planning Assistant
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Suggests optimal material delivery windows
-                    </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">Severity:</div>
+                  <div className="text-gray-300 text-sm">
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-500/20 text-yellow-300 border border-yellow-500/30">
+                      Moderate
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">
+                    Mitigation:
+                  </div>
+                  <div className="text-gray-300 text-sm">
+                    Use manual surveying methods as backup, implement surge
+                    protection for electrical equipment, and schedule critical
+                    precision work during low solar activity periods.
                   </div>
                 </div>
               </div>
 
               <Link
                 href="/api/construction"
-                className="inline-flex items-center text-yellow-400 hover:text-yellow-300 text-sm font-medium"
+                className="inline-flex items-center text-yellow-400 group-hover:text-yellow-300 text-sm font-medium transition-colors duration-200"
               >
-                View Construction API <ArrowRight className="w-4 h-4 ml-1" />
+                View Construction API{" "}
+                <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-200" />
               </Link>
             </div>
 
             {/* Telecom & Internet Providers */}
-            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6">
+            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6 hover:bg-black/30 hover:border-purple-400/30 hover:shadow-lg hover:shadow-purple-500/20 transform hover:scale-105 transition-all duration-300 ease-in-out group cursor-pointer">
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-gradient-to-r from-indigo-400 to-purple-500 rounded-lg flex items-center justify-center mr-4">
                   <Satellite className="w-6 h-6 text-white" />
@@ -505,54 +485,53 @@ export default function Home() {
                   <h3 className="text-xl font-semibold text-white">
                     Telecom & Internet Providers
                   </h3>
-                  <p className="text-gray-400 text-sm">
-                    Network reliability & performance
-                  </p>
                 </div>
               </div>
 
-              <div className="space-y-3 mb-4">
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">📉</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Signal Degradation Predictor
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Forecasts CME-induced drops in satellite and fiber
-                      performance
-                    </div>
+              <div className="space-y-4 mb-4">
+                <div>
+                  <div className="text-white font-semibold mb-1">Impact:</div>
+                  <div className="text-gray-300 text-sm">
+                    CMEs can cause satellite communication disruptions, affect
+                    fiber optic transmission, and induce power surges that
+                    damage network infrastructure and cause service outages.
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">🛠</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Maintenance Crew Alert System
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Sends preemptive alerts for outage-prone zones
-                    </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">Example:</div>
+                  <div className="text-gray-300 text-sm">
+                    During the 2003 Halloween storms, satellite communications
+                    were disrupted, and some fiber optic networks experienced
+                    transmission errors due to geomagnetic interference.
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">🔄</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      AI-Driven Network Rerouting
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Suggests alternate paths to maintain service continuity
-                    </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">Severity:</div>
+                  <div className="text-gray-300 text-sm">
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-500/20 text-red-300 border border-red-500/30">
+                      Severe
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">
+                    Mitigation:
+                  </div>
+                  <div className="text-gray-300 text-sm">
+                    Implement redundant network paths, activate backup
+                    communication systems, deploy surge protection equipment,
+                    and maintain emergency response teams for critical
+                    infrastructure.
                   </div>
                 </div>
               </div>
 
               <Link
                 href="/api/telecom"
-                className="inline-flex items-center text-purple-400 hover:text-purple-300 text-sm font-medium"
+                className="inline-flex items-center text-purple-400 group-hover:text-purple-300 text-sm font-medium transition-colors duration-200"
               >
-                View Telecom API <ArrowRight className="w-4 h-4 ml-1" />
+                View Telecom API{" "}
+                <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-200" />
               </Link>
             </div>
 
@@ -566,45 +545,43 @@ export default function Home() {
                   <h3 className="text-xl font-semibold text-white">
                     Financial Institutions
                   </h3>
-                  <p className="text-gray-400 text-sm">
-                    Trading systems & risk management
-                  </p>
                 </div>
               </div>
 
-              <div className="space-y-3 mb-4">
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">⏱</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Latency Forecast for Trading Systems
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Warns of timing disruptions in high-frequency trading
-                    </div>
+              <div className="space-y-4 mb-4">
+                <div>
+                  <div className="text-white font-semibold mb-1">Impact:</div>
+                  <div className="text-gray-300 text-sm">
+                    CMEs can cause network latency issues affecting
+                    high-frequency trading, induce power surges damaging server
+                    infrastructure, and disrupt global financial communication
+                    networks.
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">🔋</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Server Farm Surge Protection Alerts
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Helps data centers prepare for geomagnetic spikes
-                    </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">Example:</div>
+                  <div className="text-gray-300 text-sm">
+                    Solar storms have caused trading system disruptions and
+                    network latency issues, potentially affecting market
+                    operations and financial transactions.
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">📊</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Risk Modeling Dashboard
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Assesses CME impact on insurance, investment, and
-                      infrastructure portfolios
-                    </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">Severity:</div>
+                  <div className="text-gray-300 text-sm">
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-500/20 text-yellow-300 border border-yellow-500/30">
+                      Moderate
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">
+                    Mitigation:
+                  </div>
+                  <div className="text-gray-300 text-sm">
+                    Implement redundant trading systems, deploy advanced surge
+                    protection for data centers, maintain backup communication
+                    networks, and establish emergency trading protocols.
                   </div>
                 </div>
               </div>
@@ -618,7 +595,7 @@ export default function Home() {
             </div>
 
             {/* Energy Sector */}
-            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6">
+            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6 hover:bg-black/30 hover:border-orange-400/30 hover:shadow-lg hover:shadow-orange-500/20 transform hover:scale-105 transition-all duration-300 ease-in-out group cursor-pointer">
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center mr-4">
                   <Plug className="w-6 h-6 text-white" />
@@ -627,58 +604,58 @@ export default function Home() {
                   <h3 className="text-xl font-semibold text-white">
                     Energy Sector (Solar, Grid, Nuclear)
                   </h3>
-                  <p className="text-gray-400 text-sm">
-                    Power generation & distribution
-                  </p>
                 </div>
               </div>
 
-              <div className="space-y-3 mb-4">
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">⚡</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Transformer Overload Predictor
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Warns grid operators of CME-induced current spikes
-                    </div>
+              <div className="space-y-4 mb-4">
+                <div>
+                  <div className="text-white font-semibold mb-1">Impact:</div>
+                  <div className="text-gray-300 text-sm">
+                    CMEs can induce geomagnetic currents in power grids causing
+                    transformer overloads, affect solar panel efficiency, and
+                    potentially disrupt nuclear power plant monitoring systems.
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">☀</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Solar Panel Efficiency Tracker
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Adjusts output expectations based on radiation changes
-                    </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">Example:</div>
+                  <div className="text-gray-300 text-sm">
+                    The 1989 Quebec blackout was caused by geomagnetic storms
+                    inducing currents in power lines, leading to transformer
+                    failures and a 9-hour power outage affecting 6 million
+                    people.
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">🔄</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Smart Load Balancing Assistant
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Recommends energy redistribution during instability
-                    </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">Severity:</div>
+                  <div className="text-gray-300 text-sm">
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-500/20 text-red-300 border border-red-500/30">
+                      Severe
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">
+                    Mitigation:
+                  </div>
+                  <div className="text-gray-300 text-sm">
+                    Implement geomagnetic storm monitoring systems, deploy
+                    transformer protection devices, establish load shedding
+                    protocols, and maintain backup power generation capacity.
                   </div>
                 </div>
               </div>
 
               <Link
                 href="/api/energy"
-                className="inline-flex items-center text-orange-400 hover:text-orange-300 text-sm font-medium"
+                className="inline-flex items-center text-orange-400 group-hover:text-orange-300 text-sm font-medium transition-colors duration-200"
               >
-                View Energy API <ArrowRight className="w-4 h-4 ml-1" />
+                View Energy API{" "}
+                <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-200" />
               </Link>
             </div>
 
             {/* Space Agencies & Satellite Operators */}
-            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6">
+            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6 hover:bg-black/30 hover:border-violet-400/30 hover:shadow-lg hover:shadow-violet-500/20 transform hover:scale-105 transition-all duration-300 ease-in-out group cursor-pointer">
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-gradient-to-r from-violet-400 to-purple-500 rounded-lg flex items-center justify-center mr-4">
                   <span className="text-2xl">🛰</span>
@@ -687,58 +664,57 @@ export default function Home() {
                   <h3 className="text-xl font-semibold text-white">
                     Space Agencies & Satellite Operators
                   </h3>
-                  <p className="text-gray-400 text-sm">
-                    Spacecraft safety & operations
-                  </p>
                 </div>
               </div>
 
-              <div className="space-y-3 mb-4">
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">🛰</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Satellite Shielding Alerts
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Notifies operators to activate protective protocols
-                    </div>
+              <div className="space-y-4 mb-4">
+                <div>
+                  <div className="text-white font-semibold mb-1">Impact:</div>
+                  <div className="text-gray-300 text-sm">
+                    CMEs can damage satellite electronics, cause orbital
+                    perturbations, disrupt communication links, and increase
+                    radiation exposure to spacecraft and astronauts.
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">🚀</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Launch Window Optimization
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Suggests safe periods for rocket launches
-                    </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">Example:</div>
+                  <div className="text-gray-300 text-sm">
+                    The 2003 Halloween storms caused satellite anomalies,
+                    including the loss of the ADEOS-2 satellite and temporary
+                    shutdown of several others due to radiation damage.
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">📡</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Trajectory Disruption Forecasts
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Predicts orbital drift or control issues
-                    </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">Severity:</div>
+                  <div className="text-gray-300 text-sm">
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-500/20 text-red-300 border border-red-500/30">
+                      Severe
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">
+                    Mitigation:
+                  </div>
+                  <div className="text-gray-300 text-sm">
+                    Activate satellite safe modes, implement radiation shielding
+                    protocols, delay launches during high solar activity, and
+                    maintain redundant communication systems.
                   </div>
                 </div>
               </div>
 
               <Link
                 href="/api/space"
-                className="inline-flex items-center text-purple-400 hover:text-purple-300 text-sm font-medium"
+                className="inline-flex items-center text-purple-400 group-hover:text-purple-300 text-sm font-medium transition-colors duration-200"
               >
-                View Space API <ArrowRight className="w-4 h-4 ml-1" />
+                View Space API{" "}
+                <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-200" />
               </Link>
             </div>
 
             {/* Students & Educational Institutions */}
-            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6">
+            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6 hover:bg-black/30 hover:border-indigo-400/30 hover:shadow-lg hover:shadow-indigo-500/20 transform hover:scale-105 transition-all duration-300 ease-in-out group cursor-pointer">
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-lg flex items-center justify-center mr-4">
                   <span className="text-2xl">🎓</span>
@@ -747,53 +723,54 @@ export default function Home() {
                   <h3 className="text-xl font-semibold text-white">
                     Students & Educational Institutions
                   </h3>
-                  <p className="text-gray-400 text-sm">
-                    Learning & research tools
-                  </p>
                 </div>
               </div>
 
-              <div className="space-y-3 mb-4">
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">📊</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Interactive CME Dashboards
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Real-time data for physics, astronomy, and earth science
-                    </div>
+              <div className="space-y-4 mb-4">
+                <div>
+                  <div className="text-white font-semibold mb-1">Impact:</div>
+                  <div className="text-gray-300 text-sm">
+                    CMEs provide unique educational opportunities for studying
+                    space weather, physics, and earth sciences, while also
+                    potentially affecting campus infrastructure and research
+                    equipment.
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">🌌</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      Aurora Visibility Alerts
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Great for observational learning and field trips
-                    </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">Example:</div>
+                  <div className="text-gray-300 text-sm">
+                    Educational institutions use solar storm events for hands-on
+                    learning, with students monitoring aurora displays and
+                    analyzing real-time space weather data for research
+                    projects.
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">🧪</span>
-                  <div>
-                    <div className="text-white font-medium">
-                      STEM Project Simulators
-                    </div>
-                    <div className="text-gray-400 text-sm">
-                      Lets students model CME effects on real-world systems
-                    </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">Severity:</div>
+                  <div className="text-gray-300 text-sm">
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-300 border border-green-500/30">
+                      Minor
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <div className="text-white font-semibold mb-1">
+                    Mitigation:
+                  </div>
+                  <div className="text-gray-300 text-sm">
+                    Protect sensitive research equipment, implement educational
+                    programs about space weather, and use CME events as learning
+                    opportunities for STEM education.
                   </div>
                 </div>
               </div>
 
               <Link
                 href="/api/education"
-                className="inline-flex items-center text-indigo-400 hover:text-indigo-300 text-sm font-medium"
+                className="inline-flex items-center text-indigo-400 group-hover:text-indigo-300 text-sm font-medium transition-colors duration-200"
               >
-                View Education API <ArrowRight className="w-4 h-4 ml-1" />
+                View Education API{" "}
+                <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-200" />
               </Link>
             </div>
           </div>
@@ -839,7 +816,7 @@ export default function Home() {
             How It Works
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-black/20 border border-white/10 rounded-xl p-6">
+            <div className="bg-black/20 border border-white/10 rounded-xl p-6 hover:bg-black/30 hover:border-orange-400/30 hover:shadow-lg hover:shadow-orange-500/20 transform hover:scale-105 transition-all duration-300 ease-in-out group cursor-pointer">
               <h4 className="text-white font-semibold mb-2 flex items-center">
                 <Database className="w-5 h-5 mr-2" />
                 1) Ingest
@@ -849,7 +826,7 @@ export default function Home() {
                 imagery. Clean, resample, and align timestamps.
               </p>
             </div>
-            <div className="bg-black/20 border border-white/10 rounded-xl p-6">
+            <div className="bg-black/20 border border-white/10 rounded-xl p-6 hover:bg-black/30 hover:border-red-400/30 hover:shadow-lg hover:shadow-red-500/20 transform hover:scale-105 transition-all duration-300 ease-in-out group cursor-pointer">
               <h4 className="text-white font-semibold mb-2 flex items-center">
                 <Activity className="w-5 h-5 mr-2" />
                 2) Detect & Classify
@@ -859,7 +836,7 @@ export default function Home() {
                 kinematics/features for direction & strength estimation.
               </p>
             </div>
-            <div className="bg-black/20 border border-white/10 rounded-xl p-6">
+            <div className="bg-black/20 border border-white/10 rounded-xl p-6 hover:bg-black/30 hover:border-yellow-400/30 hover:shadow-lg hover:shadow-yellow-500/20 transform hover:scale-105 transition-all duration-300 ease-in-out group cursor-pointer">
               <h4 className="text-white font-semibold mb-2 flex items-center">
                 <Bell className="w-5 h-5 mr-2" />
                 3) Alert & Validate
@@ -887,21 +864,21 @@ export default function Home() {
       <section className="py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-black/20 border border-white/10 rounded-xl p-6 text-center">
+            <div className="bg-black/20 border border-white/10 rounded-xl p-6 text-center hover:bg-black/30 hover:border-yellow-400/30 hover:shadow-lg hover:shadow-yellow-500/20 transform hover:scale-105 transition-all duration-300 ease-in-out group cursor-pointer">
               <Award className="w-8 h-8 mx-auto mb-3 text-yellow-400" />
               <div className="text-white font-semibold">Hackathon‑Ready</div>
               <div className="text-gray-400 text-sm">
                 Modular routes for quick demos & evaluation.
               </div>
             </div>
-            <div className="bg-black/20 border border-white/10 rounded-xl p-6 text-center">
+            <div className="bg-black/20 border border-white/10 rounded-xl p-6 text-center hover:bg-black/30 hover:border-teal-400/30 hover:shadow-lg hover:shadow-teal-500/20 transform hover:scale-105 transition-all duration-300 ease-in-out group cursor-pointer">
               <Shield className="w-8 h-8 mx-auto mb-3 text-teal-300" />
               <div className="text-white font-semibold">Operator‑Focused</div>
               <div className="text-gray-400 text-sm">
                 Alert playbooks & maintenance modes.
               </div>
             </div>
-            <div className="bg-black/20 border border-white/10 rounded-xl p-6 text-center">
+            <div className="bg-black/20 border border-white/10 rounded-xl p-6 text-center hover:bg-black/30 hover:border-indigo-400/30 hover:shadow-lg hover:shadow-indigo-500/20 transform hover:scale-105 transition-all duration-300 ease-in-out group cursor-pointer">
               <Globe className="w-8 h-8 mx-auto mb-3 text-indigo-300" />
               <div className="text-white font-semibold">Extensible</div>
               <div className="text-gray-400 text-sm">

@@ -72,20 +72,20 @@ class AdityaL1Simulator {
   // Generate realistic magnetometer data
   generateMagnetometerData(timestamp) {
     const solarActivity = this.getSolarActivityFactor(timestamp);
-    
+
     // Base values for magnetic field components (in nT - nanotesla)
     const baseBx = 0 + (Math.random() - 0.5) * 10;
     const baseBy = 0 + (Math.random() - 0.5) * 10;
     const baseBz = -5 + (Math.random() - 0.5) * 10;
-    
+
     // Add solar activity influence
     const bx = baseBx * (1 + solarActivity * 0.5);
     const by = baseBy * (1 + solarActivity * 0.5);
     const bz = baseBz * (1 + solarActivity * 1.5); // Bz is more affected by solar activity
-    
+
     // Calculate total field magnitude
-    const totalField = Math.sqrt(bx*bx + by*by + bz*bz);
-    
+    const totalField = Math.sqrt(bx * bx + by * by + bz * bz);
+
     return {
       timestamp: new Date(timestamp).toISOString(),
       bx: parseFloat(bx.toFixed(2)),
@@ -102,45 +102,94 @@ class AdityaL1Simulator {
 
   // Generate realistic CME events
   generateCMEEvents() {
+    // Use a fixed base time to prevent hydration issues
+    const baseTime = new Date("2024-08-22T20:00:00Z").getTime();
+
     const events = [
       {
         id: "CME-2024-001",
-        detectionTime: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-        source: "SUIT_IMAGING",
-        coordinates: { latitude: 15.2, longitude: -45.8 },
+        startTime: new Date(baseTime - 2 * 60 * 60 * 1000).toISOString(),
+        source: "Aditya-L1 SUIT",
+        latitude: "15.2",
+        longitude: "-45.8",
         speed: 850,
+        speedKmSec: 850,
         halfAngle: 45,
-        intensity: "HIGH",
         earthImpact: true,
-        eta: new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString(),
+        etaHours: 48,
         confidence: 0.87,
-        classification: "EARTH-DIRECTED_CME",
+        classification: "High",
+        note: "Earth-directed CME detected by SUIT imaging",
+        isMostAccurate: true,
+        catalog: "M2M_CATALOG",
       },
       {
         id: "CME-2024-002",
-        detectionTime: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
-        source: "ASPEX_ANOMALY_DETECTION",
-        coordinates: { latitude: -22.1, longitude: 78.3 },
+        startTime: new Date(baseTime - 6 * 60 * 60 * 1000).toISOString(),
+        source: "Aditya-L1 ASPEX",
+        latitude: "-22.1",
+        longitude: "78.3",
         speed: 650,
+        speedKmSec: 650,
         halfAngle: 35,
-        intensity: "MEDIUM",
         earthImpact: false,
-        eta: null,
+        etaHours: null,
         confidence: 0.73,
-        classification: "SIDEWAYS_CME",
+        classification: "Medium",
+        note: "Sideways CME - no Earth impact expected",
+        isMostAccurate: true,
+        catalog: "M2M_CATALOG",
       },
       {
         id: "CME-2024-003",
-        detectionTime: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
-        source: "SUIT_IMAGING",
-        coordinates: { latitude: 8.7, longitude: -12.4 },
+        startTime: new Date(baseTime - 12 * 60 * 60 * 1000).toISOString(),
+        source: "Aditya-L1 SUIT",
+        latitude: "8.7",
+        longitude: "-12.4",
         speed: 1200,
+        speedKmSec: 1200,
         halfAngle: 60,
-        intensity: "EXTREME",
         earthImpact: true,
-        eta: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+        etaHours: 24,
         confidence: 0.94,
-        classification: "EARTH-DIRECTED_EXTREME_CME",
+        classification: "High",
+        note: "Extreme CME - high-speed Earth-directed event",
+        isMostAccurate: true,
+        catalog: "M2M_CATALOG",
+      },
+      {
+        id: "CME-2024-004",
+        startTime: new Date(baseTime - 18 * 60 * 60 * 1000).toISOString(),
+        source: "Aditya-L1 ASPEX",
+        latitude: "5.3",
+        longitude: "120.7",
+        speed: 450,
+        speedKmSec: 450,
+        halfAngle: 25,
+        earthImpact: false,
+        etaHours: null,
+        confidence: 0.65,
+        classification: "Low",
+        note: "Low-intensity CME - minimal impact expected",
+        isMostAccurate: false,
+        catalog: "ESTIMATE",
+      },
+      {
+        id: "CME-2024-005",
+        startTime: new Date(baseTime - 24 * 60 * 60 * 1000).toISOString(),
+        source: "Aditya-L1 SUIT",
+        latitude: "-12.8",
+        longitude: "-89.2",
+        speed: 950,
+        speedKmSec: 950,
+        halfAngle: 50,
+        earthImpact: true,
+        etaHours: 36,
+        confidence: 0.82,
+        classification: "High",
+        note: "High-speed CME with wide angle - significant impact possible",
+        isMostAccurate: true,
+        catalog: "M2M_CATALOG",
       },
     ];
 
@@ -176,7 +225,11 @@ class AdityaL1Simulator {
     }
 
     // Check for anomalies
-    const anomalies = this.detectAnomalies(newWindData, newFluxData, newMagData);
+    const anomalies = this.detectAnomalies(
+      newWindData,
+      newFluxData,
+      newMagData
+    );
 
     return {
       timestamp: new Date(now).toISOString(),
@@ -243,19 +296,26 @@ class AdityaL1Simulator {
         source: "ASPEX_ANOMALY_DETECTOR",
       });
     }
-    
+
     // Magnetic field anomaly detection
-    if (magData && magData.totalField > this.anomalyThresholds.magneticField.extreme) {
+    if (
+      magData &&
+      magData.totalField > this.anomalyThresholds.magneticField.extreme
+    ) {
       anomalies.push({
         type: "EXTREME_MAGNETIC_FIELD",
         severity: "CRITICAL",
         value: magData.totalField,
         threshold: this.anomalyThresholds.magneticField.extreme,
-        description: "Extreme magnetic field detected - geomagnetic storm likely",
+        description:
+          "Extreme magnetic field detected - geomagnetic storm likely",
         timestamp: magData.timestamp,
         source: "MAG_ANOMALY_DETECTOR",
       });
-    } else if (magData && magData.totalField > this.anomalyThresholds.magneticField.high) {
+    } else if (
+      magData &&
+      magData.totalField > this.anomalyThresholds.magneticField.high
+    ) {
       anomalies.push({
         type: "HIGH_MAGNETIC_FIELD",
         severity: "HIGH",
@@ -347,27 +407,33 @@ class AdityaL1Simulator {
 
   // Simulate CME detection
   simulateCMEDetection() {
-    const now = Date.now();
+    // Use fixed base time to prevent hydration issues
+    const baseTime = new Date("2024-08-22T20:00:00Z").getTime();
+    const speed = Math.round(400 + Math.random() * 800);
+    const halfAngle = Math.round(20 + Math.random() * 50);
+    const earthImpact = Math.random() > 0.3;
+    const etaHours = earthImpact ? Math.round(24 + Math.random() * 72) : null;
+
     const newCME = {
       id: `CME-2024-${String(this.cmeEvents.length + 1).padStart(3, "0")}`,
-      detectionTime: new Date(now).toISOString(),
-      source: Math.random() > 0.5 ? "SUIT_IMAGING" : "ASPEX_ANOMALY_DETECTION",
-      coordinates: {
-        latitude: (Math.random() - 0.5) * 60,
-        longitude: (Math.random() - 0.5) * 360,
-      },
-      speed: Math.round(400 + Math.random() * 800),
-      halfAngle: Math.round(20 + Math.random() * 50),
-      intensity: this.getIntensityLevel(Math.random()),
-      earthImpact: Math.random() > 0.3,
-      eta:
-        Math.random() > 0.3
-          ? new Date(
-              now + (24 + Math.random() * 72) * 60 * 60 * 1000
-            ).toISOString()
-          : null,
+      startTime: new Date(
+        baseTime - Math.random() * 24 * 60 * 60 * 1000
+      ).toISOString(),
+      source: Math.random() > 0.5 ? "Aditya-L1 SUIT" : "Aditya-L1 ASPEX",
+      latitude: ((Math.random() - 0.5) * 60).toFixed(1),
+      longitude: ((Math.random() - 0.5) * 360).toFixed(1),
+      speed: speed,
+      speedKmSec: speed,
+      halfAngle: halfAngle,
+      earthImpact: earthImpact,
+      etaHours: etaHours,
       confidence: 0.7 + Math.random() * 0.25,
-      classification: this.getCMEClassification(Math.random()),
+      classification: this.getIntensityLevel(Math.random()),
+      note: earthImpact
+        ? `Simulated CME detected - Earth impact expected in ${etaHours} hours`
+        : "Simulated CME detected - no Earth impact expected",
+      isMostAccurate: Math.random() > 0.2,
+      catalog: Math.random() > 0.2 ? "M2M_CATALOG" : "ESTIMATE",
     };
 
     this.cmeEvents.unshift(newCME);

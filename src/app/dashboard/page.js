@@ -27,6 +27,25 @@ import NasaApiStatus from "@/components/NasaApiStatus";
 // LiveAlertSystem and ISROIntegration imports removed
 import { adityaL1Simulator } from "@/lib/aditya-l1/simulator";
 
+// Client-side only component to prevent hydration issues
+function ClientOnly({ children }) {
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  if (!hasMounted) {
+    return (
+      <div className="animate-pulse bg-gray-800/20 rounded-lg p-4">
+        Loading...
+      </div>
+    );
+  }
+
+  return children;
+}
+
 export default function Dashboard() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [liveData, setLiveData] = useState(null);
@@ -37,6 +56,7 @@ export default function Dashboard() {
   const [cmeError, setCmeError] = useState(null);
   const [isSimulating, setIsSimulating] = useState(true);
   const [isClient, setIsClient] = useState(false);
+  const [telegramStatus, setTelegramStatus] = useState(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -47,66 +67,141 @@ export default function Dashboard() {
     const initializeData = async () => {
       const status = adityaL1Simulator.getSystemStatus();
       const historical = adityaL1Simulator.getHistoricalData();
-      
+
       // Ensure magnetometer data is included in historical data
       if (!historical.magnetometer) {
         historical.magnetometer = [];
       }
-      
+
       // Generate initial magnetometer data if empty
       if (historical.magnetometer.length === 0) {
         const now = Date.now();
         for (let i = 24; i >= 0; i--) {
           const timestamp = now - i * 60 * 60 * 1000;
-          historical.magnetometer.push(adityaL1Simulator.generateMagnetometerData(timestamp));
+          historical.magnetometer.push(
+            adityaL1Simulator.generateMagnetometerData(timestamp)
+          );
         }
       }
-      
+
       // Initialize with simulator data first to ensure we have something to display
-      console.log('Initializing with simulator data:', adityaL1Simulator.cmeEvents);
+      console.log(
+        "Initializing with simulator data:",
+        adityaL1Simulator.cmeEvents
+      );
       setCmeEvents(adityaL1Simulator.cmeEvents);
-      
+
+      // Force immediate display of simulator data
+      setTimeout(() => {
+        if (!cmeEvents || cmeEvents.length === 0) {
+          console.log("Forcing simulator data display");
+          setCmeEvents(adityaL1Simulator.cmeEvents);
+        }
+      }, 100);
+
+      // Test Telegram connection on initialization
+      testTelegramConnection();
+
       // Fetch real CME data from NASA DONKI API
       setCmeLoading(true);
       setCmeError(null);
       try {
-        const response = await fetch('/api/cactus');
-        if (response.ok) {
-          const data = await response.json();
-          console.log('API response:', data);
-          if (data.ok && Array.isArray(data.data)) {
-            console.log('Setting CME events from API:', data.data);
-            setCmeEvents(data.data);
-            if (data.fallback) {
-              setCmeError(data.note || 'Using fallback data');
+        // Try multiple API endpoints for better reliability
+        const endpoints = [
+          "/api/test-cme",
+          "/api/cme",
+          "/api/cactus",
+          "/api/noaa",
+        ];
+        let successfulData = null;
+
+        for (const endpoint of endpoints) {
+          try {
+            console.log(`Trying endpoint: ${endpoint}`);
+            const response = await fetch(endpoint, {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              // Add timeout to prevent hanging requests
+              signal: AbortSignal.timeout(10000), // 10 second timeout
+            });
+
+            if (response.ok) {
+              const data = await response.json();
+              console.log(`API response from ${endpoint}:`, data);
+
+              // Check if we have valid CME events data
+              if (
+                data.events &&
+                Array.isArray(data.events) &&
+                data.events.length > 0
+              ) {
+                console.log(
+                  `Setting CME events from ${endpoint}:`,
+                  data.events
+                );
+                setCmeEvents(data.events);
+                successfulData = data;
+                if (data.isFallback) {
+                  setCmeError(
+                    `Using fallback data from ${endpoint}: ${
+                      data.note || "API unavailable"
+                    }`
+                  );
+                }
+                break; // Use the first successful endpoint
+              } else if (
+                data.data &&
+                Array.isArray(data.data) &&
+                data.data.length > 0
+              ) {
+                console.log(
+                  `Setting CME events from ${endpoint} (data field):`,
+                  data.data
+                );
+                setCmeEvents(data.data);
+                successfulData = data;
+                if (data.fallback) {
+                  setCmeError(
+                    `Using fallback data from ${endpoint}: ${
+                      data.note || "API unavailable"
+                    }`
+                  );
+                }
+                break; // Use the first successful endpoint
+              }
             }
-          } else {
-            // Fallback to simulator data if API response is not as expected
-            console.log('Invalid API response, using simulator data');
-            setCmeEvents(adityaL1Simulator.cmeEvents);
-            setCmeError('Invalid response format: Expected an array of CME events');
+          } catch (endpointError) {
+            console.warn(`Endpoint ${endpoint} failed:`, endpointError.message);
+            continue; // Try next endpoint
           }
-        } else {
-          // Fallback to simulator data if API call fails
-          console.log('API call failed, using simulator data');
+        }
+
+        // If no endpoints worked, use simulator data
+        if (!successfulData) {
+          console.log("All API endpoints failed, using simulator data");
           setCmeEvents(adityaL1Simulator.cmeEvents);
-          setCmeError(`API error: ${response.status}`);
+          setCmeError("All API endpoints unavailable, using simulator data");
         }
       } catch (error) {
-        console.error('Error fetching CME data:', error);
+        console.error("Error fetching CME data:", error);
         // Fallback to simulator data if API call throws an error
-        console.log('Error fetching data, using simulator data:', adityaL1Simulator.cmeEvents);
+        console.log(
+          "Error fetching data, using simulator data:",
+          adityaL1Simulator.cmeEvents
+        );
         setCmeEvents(adityaL1Simulator.cmeEvents);
         setCmeError(`Error: ${error.message}`);
       } finally {
         setCmeLoading(false);
       }
-      
+
       // Ensure we have at least the simulator data if API fails or returns empty
       setTimeout(() => {
-        setCmeEvents(prevEvents => {
+        setCmeEvents((prevEvents) => {
           if (!prevEvents || prevEvents.length === 0) {
-            console.log('No events found, using simulator data as fallback');
+            console.log("No events found, using simulator data as fallback");
             return adityaL1Simulator.cmeEvents;
           }
           return prevEvents;
@@ -154,6 +249,19 @@ export default function Dashboard() {
     };
   }, [isSimulating]);
 
+  // Test Telegram connection
+  const testTelegramConnection = async () => {
+    try {
+      const response = await fetch("/api/telegram-test");
+      const result = await response.json();
+      setTelegramStatus(result.success ? "connected" : "disconnected");
+      console.log("Telegram status:", result);
+    } catch (error) {
+      console.error("Telegram test failed:", error);
+      setTelegramStatus("error");
+    }
+  };
+
   const toggleSimulation = () => {
     setIsSimulating(!isSimulating);
   };
@@ -175,9 +283,9 @@ export default function Dashboard() {
   const formatTime = (date) => {
     if (!isClient) return "--:--:--";
     // Use a fixed format that doesn't depend on locale settings
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    const seconds = date.getSeconds().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const seconds = date.getSeconds().toString().padStart(2, "0");
     return `${hours}:${minutes}:${seconds}`;
   };
 
@@ -221,6 +329,24 @@ export default function Dashboard() {
               >
                 {isSimulating ? "Pause" : "Start"} Simulation
               </button>
+              <button
+                onClick={testTelegramConnection}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  telegramStatus === "connected"
+                    ? "bg-green-500 hover:bg-green-600 text-white"
+                    : telegramStatus === "error"
+                    ? "bg-red-500 hover:bg-red-600 text-white"
+                    : "bg-blue-500 hover:bg-blue-600 text-white"
+                }`}
+                title="Test Telegram Integration"
+              >
+                {telegramStatus === "connected"
+                  ? "✓"
+                  : telegramStatus === "error"
+                  ? "✗"
+                  : "📱"}{" "}
+                Telegram
+              </button>
               <div className="text-sm text-slate-400">
                 {formatTime(currentTime)}
               </div>
@@ -258,7 +384,15 @@ export default function Dashboard() {
             {/* CME Map */}
             <div className="lg:col-span-2">
               {/* Force direct use of simulator data if cmeEvents is empty */}
-              <CMEMap events={cmeEvents && cmeEvents.length > 0 ? cmeEvents : adityaL1Simulator.cmeEvents} />
+              <ClientOnly>
+                <CMEMap
+                  events={
+                    cmeEvents && cmeEvents.length > 0
+                      ? cmeEvents
+                      : adityaL1Simulator.cmeEvents
+                  }
+                />
+              </ClientOnly>
               {cmeEvents && cmeEvents.length === 0 && (
                 <div className="mt-2 text-xs text-amber-400">
                   Using simulator fallback data for visualization
@@ -266,8 +400,6 @@ export default function Dashboard() {
               )}
             </div>
           </div>
-
-
         </div>
 
         {/* Data Analysis & Insights */}
@@ -406,44 +538,52 @@ export default function Dashboard() {
           </div>
 
           <div className="bg-gradient-to-br from-slate-800/40 to-slate-900/40 backdrop-blur-md border border-slate-600/30 rounded-xl p-6 shadow-xl">
-            <CMETable 
-              events={cmeEvents} 
-              loading={cmeLoading} 
-              error={cmeError} 
-              onRefresh={async () => {
-                setCmeLoading(true);
-                setCmeError(null);
-                try {
-                  const response = await fetch('/api/cactus', {
-                    cache: 'no-store' // Ensure we get fresh data
-                  });
-                  if (response.ok) {
-                    const data = await response.json();
-                    if (data.ok && Array.isArray(data.data)) {
-                      setCmeEvents(data.data);
-                      if (data.fallback) {
-                        setCmeError(data.note || 'Using fallback data');
+            <ClientOnly>
+              <CMETable
+                cmeEvents={cmeEvents}
+                loading={cmeLoading}
+                error={cmeError}
+                onRefresh={async () => {
+                  setCmeLoading(true);
+                  setCmeError(null);
+                  try {
+                    // Try test API first, then fallback to simulator
+                    const response = await fetch("/api/test-cme", {
+                      cache: "no-store", // Ensure we get fresh data
+                    });
+                    if (response.ok) {
+                      const data = await response.json();
+                      if (data.success && Array.isArray(data.events)) {
+                        console.log("Test API returned events:", data.events);
+                        setCmeEvents(data.events);
+                        setCmeError(null);
+                      } else {
+                        // Fallback to simulator data
+                        console.log("Test API failed, using simulator data");
+                        setCmeEvents(adityaL1Simulator.cmeEvents);
+                        setCmeError("Using simulator data - API unavailable");
                       }
                     } else {
-                      // Fallback to simulator data if API response is not as expected
+                      // Fallback to simulator data if API call fails
+                      console.log("Test API call failed, using simulator data");
                       setCmeEvents(adityaL1Simulator.cmeEvents);
-                      setCmeError('Invalid response format: Expected an array of CME events');
+                      setCmeError(
+                        `API error: ${response.status} - Using simulator data`
+                      );
                     }
-                  } else {
-                    setCmeError(`API error: ${response.status}`);
+                  } catch (error) {
+                    console.error("Error refreshing CME data:", error);
+                    setCmeError(
+                      `Error: ${error.message} - Using simulator data`
+                    );
                     // Fallback to simulator data
                     setCmeEvents(adityaL1Simulator.cmeEvents);
+                  } finally {
+                    setCmeLoading(false);
                   }
-                } catch (error) {
-                  console.error('Error refreshing CME data:', error);
-                  setCmeError(`Error: ${error.message}`);
-                  // Fallback to simulator data
-                  setCmeEvents(adityaL1Simulator.cmeEvents);
-                } finally {
-                  setCmeLoading(false);
-                }
-              }}
-            />
+                }}
+              />
+            </ClientOnly>
           </div>
         </div>
 
@@ -475,9 +615,13 @@ export default function Dashboard() {
               <div className="flex items-center space-x-2">
                 <button
                   onClick={toggleSimulation}
-                  className={`px-3 py-1 rounded-md text-sm font-medium ${isSimulating ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'} text-white transition-colors`}
+                  className={`px-3 py-1 rounded-md text-sm font-medium ${
+                    isSimulating
+                      ? "bg-red-500 hover:bg-red-600"
+                      : "bg-green-500 hover:bg-green-600"
+                  } text-white transition-colors`}
                 >
-                  {isSimulating ? 'Stop Simulation' : 'Start Simulation'}
+                  {isSimulating ? "Stop Simulation" : "Start Simulation"}
                 </button>
               </div>
             </div>

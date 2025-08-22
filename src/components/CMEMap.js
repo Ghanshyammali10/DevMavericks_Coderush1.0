@@ -14,18 +14,17 @@ function formatDate(dateString) {
   try {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return dateString; // Return original if invalid
-    
+
     // Use a fixed format that doesn't depend on locale settings
     // Format: MM/DD/YYYY, HH:MM:SS (24-hour format)
     const month = date.getMonth() + 1;
     const day = date.getDate();
     const year = date.getFullYear();
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    // Important: Use a fixed value for seconds to prevent hydration errors
-    // This ensures server and client rendering match exactly
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    // Use fixed seconds to prevent hydration errors
     const seconds = "00";
-    
+
     return `${month}/${day}/${year}, ${hours}:${minutes}:${seconds}`;
   } catch (e) {
     return dateString; // Return original on error
@@ -35,29 +34,31 @@ function formatDate(dateString) {
 function getLatitude(event) {
   // Check all possible locations for latitude data
   if (event.latitude !== undefined) return event.latitude;
-  if (event.coordinates?.latitude !== undefined) return event.coordinates.latitude;
+  if (event.coordinates?.latitude !== undefined)
+    return event.coordinates.latitude;
   if (event.sourceLocation) {
     // Try to parse from sourceLocation format like "N12E25"
     const match = event.sourceLocation.match(/([NS])(\d+)/);
     if (match) {
       const value = parseInt(match[2]);
-      return match[1] === 'N' ? value : -value;
+      return match[1] === "N" ? value : -value;
     }
   }
-  console.log('Event missing latitude:', event);
+  console.log("Event missing latitude:", event);
   return "—";
 }
 
 function getLongitude(event) {
   // Check all possible locations for longitude data
   if (event.longitude !== undefined) return event.longitude;
-  if (event.coordinates?.longitude !== undefined) return event.coordinates.longitude;
+  if (event.coordinates?.longitude !== undefined)
+    return event.coordinates.longitude;
   if (event.sourceLocation) {
     // Try to parse from sourceLocation format like "N12E25"
     const match = event.sourceLocation.match(/([EW])(\d+)/);
     if (match) {
       const value = parseInt(match[2]);
-      return match[1] === 'E' ? value : -value;
+      return match[1] === "E" ? value : -value;
     }
   }
   return "—";
@@ -67,22 +68,22 @@ const TOPO_JSON =
   "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
 export default function CMEMap({ events = [] }) {
-  console.log('CMEMap received events:', events);
-  
+  console.log("CMEMap received events:", events);
+
   // Force array if events is undefined or null
   const safeEvents = Array.isArray(events) ? events : [];
-  
+
   const markers = useMemo(() => {
-    console.log('CME events received:', safeEvents);
+    console.log("CME events received:", safeEvents);
     if (safeEvents.length === 0) {
-      console.log('No CME events to process');
+      console.log("No CME events to process");
       return [];
     }
-    
+
     const filteredMarkers = safeEvents
       .filter((e) => {
         if (!e) {
-          console.log('Skipping null/undefined event');
+          console.log("Skipping null/undefined event");
           return false;
         }
         // Get latitude and longitude using the same helper functions as CMETable
@@ -90,7 +91,7 @@ export default function CMEMap({ events = [] }) {
         const lon = getLongitude(e);
         const valid = lat !== "—" && lon !== "—";
         if (!valid) {
-          console.log('Skipping event with invalid coordinates:', e);
+          console.log("Skipping event with invalid coordinates:", e);
         }
         return valid;
       })
@@ -101,15 +102,18 @@ export default function CMEMap({ events = [] }) {
           speed: e.speed || e.speedKmSec || 800, // Default speed
           time: formatDate(e.startTime || e.time21_5 || e.detectionTime),
           note: e.note || e.activityID || e.id || "",
-          isMostAccurate: e.isMostAccurate || e.catalog === "M2M_CATALOG" || e.mostAccurateOnly === true,
+          isMostAccurate:
+            e.isMostAccurate ||
+            e.catalog === "M2M_CATALOG" ||
+            e.mostAccurateOnly === true,
           halfAngle: e.halfAngle || 30, // Default half angle if not provided
           earthImpact: e.earthImpact || false,
           classification: e.classification || "",
         };
-        console.log('Created marker:', marker);
+        console.log("Created marker:", marker);
         return marker;
       });
-    console.log('Filtered markers with prediction areas:', filteredMarkers);
+    console.log("Filtered markers with prediction areas:", filteredMarkers);
     return filteredMarkers;
   }, [safeEvents]);
 
@@ -207,33 +211,33 @@ export default function CMEMap({ events = [] }) {
 
           {/* CME Prediction Areas */}
           {markers.map((m) => {
-            console.log('Processing marker for prediction area:', m);
+            console.log("Processing marker for prediction area:", m);
             // Create a proper cone shape for prediction area
             const centerX = m.coordinates[0];
             const centerY = m.coordinates[1];
             const halfAngle = m.halfAngle || 30; // Ensure we have a half angle
             const angleInRadians = (halfAngle * Math.PI) / 180;
-            
+
             // Calculate points for a cone/triangle shape
             // The cone extends in the direction away from the sun (center of map)
             // For solar physics, we need to point away from the center (0,0)
             // Calculate direction from center of sun (0,0) to the CME source point
             const direction = Math.atan2(centerY, centerX);
-            
+
             // Calculate the cone points - cone extends outward from the CME source
             const coneLength = 100; // Increased length of the cone for better visibility
             const tipX = centerX + coneLength * Math.cos(direction);
             const tipY = centerY + coneLength * Math.sin(direction);
-            
+
             // Calculate the base points of the cone using the half angle
             const baseWidth = coneLength * Math.tan(angleInRadians);
             const perpDirection = direction + Math.PI / 2;
-            
+
             const basePoint1X = centerX + baseWidth * Math.cos(perpDirection);
             const basePoint1Y = centerY + baseWidth * Math.sin(perpDirection);
             const basePoint2X = centerX - baseWidth * Math.cos(perpDirection);
             const basePoint2Y = centerY - baseWidth * Math.sin(perpDirection);
-            
+
             // Create path for the cone
             const conePath = `
               M ${centerX} ${centerY}
@@ -242,32 +246,42 @@ export default function CMEMap({ events = [] }) {
               L ${basePoint2X} ${basePoint2Y}
               Z
             `;
-            
-            console.log('Generated cone path:', { 
-              centerX, centerY, halfAngle, direction, 
-              tipX, tipY, basePoint1X, basePoint1Y, basePoint2X, basePoint2Y 
+
+            console.log("Generated cone path:", {
+              centerX,
+              centerY,
+              halfAngle,
+              direction,
+              tipX,
+              tipY,
+              basePoint1X,
+              basePoint1Y,
+              basePoint2X,
+              basePoint2Y,
             });
-            
+
             // Draw the prediction cone only if we have valid coordinates and half angle
             return (
               <g key={`area-${m.id}`}>
                 {/* Prediction cone visualization */}
                 <path
                   d={conePath}
-                  fill={m.earthImpact ? "rgba(255, 0, 0, 0.6)" : "rgba(255, 0, 255, 0.5)"}
-                  stroke={m.earthImpact ? "rgba(255, 0, 0, 0.9)" : "rgba(255, 0, 255, 0.8)"}
+                  fill={
+                    m.earthImpact
+                      ? "rgba(255, 0, 0, 0.6)"
+                      : "rgba(255, 0, 255, 0.5)"
+                  }
+                  stroke={
+                    m.earthImpact
+                      ? "rgba(255, 0, 0, 0.9)"
+                      : "rgba(255, 0, 255, 0.8)"
+                  }
                   strokeWidth="3"
                   opacity="1"
                   filter="url(#glow)"
                 />
                 {/* Debug point at the tip of the cone */}
-                <circle
-                  cx={tipX}
-                  cy={tipY}
-                  r="2"
-                  fill="white"
-                  stroke="none"
-                />
+                <circle cx={tipX} cy={tipY} r="2" fill="white" stroke="none" />
               </g>
             );
           })}
@@ -297,7 +311,9 @@ export default function CMEMap({ events = [] }) {
               <title>
                 {`CME Event\nTime: ${m.time || "Unknown"}\nSpeed: ${
                   m.speed ?? "—"
-                } km/s\nHalf Angle: ${m.halfAngle}°\nEarth Impact: ${m.earthImpact ? "Yes" : "No"}\nAccuracy: ${m.isMostAccurate ? "High" : "Estimate"}\n${
+                } km/s\nHalf Angle: ${m.halfAngle}°\nEarth Impact: ${
+                  m.earthImpact ? "Yes" : "No"
+                }\nAccuracy: ${m.isMostAccurate ? "High" : "Estimate"}\n${
                   m.note || ""
                 }`}
               </title>
