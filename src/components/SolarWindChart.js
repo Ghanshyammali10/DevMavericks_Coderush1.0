@@ -1,229 +1,189 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
   Tooltip,
-  Legend,
-  TimeScale,
-} from "chart.js";
-import { Line } from "react-chartjs-2";
-import "chartjs-adapter-date-fns";
+  ResponsiveContainer,
+  Area,
+  AreaChart,
+} from "recharts";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  TimeScale
-);
+export default function SolarWindChart({ data }) {
+  // Transform data for the chart
+  const chartData =
+    data?.map((item, index) => ({
+      time: (() => {
+        const date = new Date(item.timestamp);
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        return `${hours}:${minutes}`;
+      })(),
+      windSpeed: item.windSpeed,
+      density: item.density,
+      temperature: item.temperature / 1000, // Convert to thousands for better display
+      magneticField: item.magneticField,
+    })) || [];
 
-export default function SolarWindChart({
-  data = [],
-  loading = false,
-  error = null,
-}) {
-  const [chartData, setChartData] = useState(null);
-  const chartRef = useRef(null);
-
-  useEffect(() => {
-    if (!data || data.length === 0) {
-      setChartData(null);
-      return;
+  // Generate sample data if no real data
+  if (chartData.length === 0) {
+    for (let i = 23; i >= 0; i--) {
+      const time = new Date(Date.now() - i * 60 * 60 * 1000);
+      chartData.push({
+        time: `${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`,
+        windSpeed: 400 + Math.random() * 200,
+        density: 5 + Math.random() * 10,
+        temperature: (100 + Math.random() * 200) / 1000,
+        magneticField: 5 + Math.random() * 15,
+      });
     }
+  }
 
-    // Prepare data for chart
-    const timestamps = data.map((entry) => entry.timestamp);
-    const speeds = data.map((entry) => entry.speed);
-    const densities = data.map((entry) => entry.density);
-    const temperatures = data.map((entry) => entry.temperature);
-    const magneticFields = data.map((entry) => entry.bt);
-
-    setChartData({
-      labels: timestamps,
-      datasets: [
-        {
-          label: "Solar Wind Speed (km/s)",
-          data: speeds,
-          borderColor: "rgb(255, 99, 132)",
-          backgroundColor: "rgba(255, 99, 132, 0.1)",
-          yAxisID: "y",
-          tension: 0.1,
-        },
-        {
-          label: "Density (protons/cm³)",
-          data: densities,
-          borderColor: "rgb(54, 162, 235)",
-          backgroundColor: "rgba(54, 162, 235, 0.1)",
-          yAxisID: "y1",
-          tension: 0.1,
-        },
-        {
-          label: "Temperature (K)",
-          data: temperatures,
-          borderColor: "rgb(255, 205, 86)",
-          backgroundColor: "rgba(255, 205, 86, 0.1)",
-          yAxisID: "y2",
-          tension: 0.1,
-        },
-        {
-          label: "Magnetic Field (nT)",
-          data: magneticFields,
-          borderColor: "rgb(75, 192, 192)",
-          backgroundColor: "rgba(75, 192, 192, 0.1)",
-          yAxisID: "y3",
-          tension: 0.1,
-        },
-      ],
-    });
-  }, [data]);
-
-  const options = {
-    responsive: true,
-    interaction: {
-      mode: "index",
-      intersect: false,
-    },
-    plugins: {
-      legend: {
-        position: "top",
-        labels: {
-          color: "white",
-        },
-      },
-      title: {
-        display: true,
-        text: "Real-Time Solar Wind Data",
-        color: "white",
-      },
-    },
-    scales: {
-      x: {
-        type: "time",
-        time: {
-          unit: "hour",
-          displayFormats: {
-            hour: "HH:mm",
-          },
-        },
-        ticks: {
-          color: "white",
-        },
-        grid: {
-          color: "rgba(255, 255, 255, 0.1)",
-        },
-      },
-      y: {
-        type: "linear",
-        display: true,
-        position: "left",
-        title: {
-          display: true,
-          text: "Speed (km/s)",
-          color: "white",
-        },
-        ticks: {
-          color: "white",
-        },
-        grid: {
-          color: "rgba(255, 255, 255, 0.1)",
-        },
-      },
-      y1: {
-        type: "linear",
-        display: true,
-        position: "right",
-        title: {
-          display: true,
-          text: "Density (protons/cm³)",
-          color: "white",
-        },
-        ticks: {
-          color: "white",
-        },
-        grid: {
-          drawOnChartArea: false,
-        },
-      },
-      y2: {
-        type: "linear",
-        display: false,
-        title: {
-          display: true,
-          text: "Temperature (K)",
-          color: "white",
-        },
-        ticks: {
-          color: "white",
-        },
-        grid: {
-          drawOnChartArea: false,
-        },
-      },
-      y3: {
-        type: "linear",
-        display: false,
-        title: {
-          display: true,
-          text: "Magnetic Field (nT)",
-          color: "white",
-        },
-        ticks: {
-          color: "white",
-        },
-        grid: {
-          drawOnChartArea: false,
-        },
-      },
-    },
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-slate-800 border border-slate-600 rounded-lg p-3 shadow-xl">
+          <p className="text-white font-medium mb-2">{`Time: ${label}`}</p>
+          {payload.map((entry, index) => (
+            <p key={index} className="text-sm" style={{ color: entry.color }}>
+              {`${entry.name}: ${entry.value}${entry.unit || ""}`}
+            </p>
+          ))}
+        </div>
+      );
+    }
+    return null;
   };
 
-  if (loading) {
-    return (
-      <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6">
-        <div className="animate-pulse">
-          <div className="h-4 bg-white/10 rounded w-1/3 mb-4"></div>
-          <div className="h-64 bg-white/5 rounded"></div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6">
-        <div className="text-red-400 text-center">
-          <p className="text-lg font-semibold mb-2">
-            Error Loading Solar Wind Data
-          </p>
-          <p className="text-sm">{error}</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!chartData) {
-    return (
-      <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6">
-        <div className="text-gray-400 text-center">
-          <p className="text-lg font-semibold mb-2">No Solar Wind Data</p>
-          <p className="text-sm">Data will appear here when available</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6">
-      <Line ref={chartRef} data={chartData} options={options} />
+    <div className="w-full h-80">
+      <ResponsiveContainer width="100%" height="100%">
+        <AreaChart
+          data={chartData}
+          margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+        >
+          <defs>
+            <linearGradient id="windSpeedGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.1} />
+            </linearGradient>
+            <linearGradient id="densityGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#10b981" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="#10b981" stopOpacity={0.1} />
+            </linearGradient>
+          </defs>
+
+          <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.3} />
+          <XAxis
+            dataKey="time"
+            stroke="#94a3b8"
+            fontSize={12}
+            tick={{ fill: "#94a3b8" }}
+          />
+          <YAxis
+            yAxisId="left"
+            stroke="#94a3b8"
+            fontSize={12}
+            tick={{ fill: "#94a3b8" }}
+            label={{
+              value: "Wind Speed (km/s)",
+              angle: -90,
+              position: "insideLeft",
+              fill: "#94a3b8",
+              fontSize: 12,
+            }}
+          />
+          <YAxis
+            yAxisId="right"
+            orientation="right"
+            stroke="#94a3b8"
+            fontSize={12}
+            tick={{ fill: "#94a3b8" }}
+            label={{
+              value: "Density (p/cm³)",
+              angle: 90,
+              position: "insideRight",
+              fill: "#94a3b8",
+              fontSize: 12,
+            }}
+          />
+
+          <Tooltip content={<CustomTooltip />} />
+
+          {/* Primary metric: Wind Speed */}
+          <Area
+            yAxisId="left"
+            type="monotone"
+            dataKey="windSpeed"
+            stroke="#3b82f6"
+            strokeWidth={3}
+            fill="url(#windSpeedGradient)"
+            name="Wind Speed"
+            unit=" km/s"
+          />
+
+          {/* Secondary metric: Density */}
+          <Area
+            yAxisId="right"
+            type="monotone"
+            dataKey="density"
+            stroke="#10b981"
+            strokeWidth={2}
+            fill="url(#densityGradient)"
+            name="Density"
+            unit=" p/cm³"
+          />
+
+          {/* Temperature line */}
+          <Line
+            yAxisId="left"
+            type="monotone"
+            dataKey="temperature"
+            stroke="#f59e0b"
+            strokeWidth={2}
+            strokeDasharray="5 5"
+            name="Temperature"
+            unit=" kK"
+            dot={false}
+          />
+
+          {/* Magnetic Field line */}
+          <Line
+            yAxisId="left"
+            type="monotone"
+            dataKey="magneticField"
+            stroke="#8b5cf6"
+            strokeWidth={2}
+            strokeDasharray="3 3"
+            name="Magnetic Field"
+            unit=" nT"
+            dot={false}
+          />
+        </AreaChart>
+      </ResponsiveContainer>
+
+      {/* Chart Legend */}
+      <div className="flex flex-wrap justify-center gap-4 mt-4 text-xs">
+        <div className="flex items-center space-x-2">
+          <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+          <span className="text-slate-300">Wind Speed</span>
+        </div>
+        <div className="flex items-center space-x-2">
+          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+          <span className="text-slate-300">Density</span>
+        </div>
+        <div className="flex items-center space-x-2">
+          <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+          <span className="text-slate-300">Temperature</span>
+        </div>
+        <div className="flex items-center space-x-2">
+          <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
+          <span className="text-slate-300">Magnetic Field</span>
+        </div>
+      </div>
     </div>
   );
 }

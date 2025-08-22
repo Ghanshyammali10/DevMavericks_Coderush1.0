@@ -1,179 +1,164 @@
 "use client";
 
-import { useState } from "react";
-import {
-  AlertTriangle,
-  Clock,
-  MapPin,
-  Zap,
-  ChevronDown,
-  ChevronUp,
-  ExternalLink,
-  Bell,
-} from "lucide-react";
+import { AlertTriangle, Zap, Shield, Activity } from "lucide-react";
 
 export default function AlertCard({ alert }) {
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  const severityColors = {
-    low: {
-      bg: "bg-yellow-500/20",
-      border: "border-yellow-500/30",
-      text: "text-yellow-400",
-      icon: "text-yellow-400",
-      glow: "glow-yellow",
-    },
-    medium: {
-      bg: "bg-orange-500/20",
-      border: "border-orange-500/30",
-      text: "text-orange-400",
-      icon: "text-orange-400",
-      glow: "glow-orange",
-    },
-    high: {
-      bg: "bg-red-500/20",
-      border: "border-red-500/30",
-      text: "text-red-400",
-      icon: "text-red-400",
-      glow: "glow-red",
-    },
-    critical: {
-      bg: "bg-red-600/30",
-      border: "border-red-600/50",
-      text: "text-red-300",
-      icon: "text-red-300",
-      glow: "glow-red",
-    },
-  };
-
-  const severity = alert?.severity || "medium";
-  const colors = severityColors[severity];
-
-  const formatTime = (timestamp) => {
-    const date = new Date(timestamp);
-    return date.toLocaleString();
-  };
-
-  const getSeverityIcon = (severity) => {
-    switch (severity) {
-      case "critical":
-        return <Zap className="w-5 h-5" />;
-      case "high":
-        return <AlertTriangle className="w-5 h-5" />;
-      case "medium":
-        return <AlertTriangle className="w-5 h-5" />;
-      case "low":
-        return <Bell className="w-5 h-5" />;
+  const getAlertIcon = (type) => {
+    switch (type) {
+      case "EXTREME_WIND_SPEED":
+      case "HIGH_WIND_SPEED":
+        return <Zap className="w-5 h-5 text-yellow-400" />;
+      case "EXTREME_PARTICLE_FLUX":
+      case "HIGH_PARTICLE_FLUX":
+        return <Shield className="w-5 h-5 text-red-400" />;
       default:
-        return <AlertTriangle className="w-5 h-5" />;
+        return <AlertTriangle className="w-5 h-5 text-orange-400" />;
+    }
+  };
+
+  const getSeverityColor = (severity) => {
+    switch (severity) {
+      case "CRITICAL":
+        return "border-red-500/50 bg-red-500/10 text-red-400";
+      case "HIGH":
+        return "border-orange-500/50 bg-orange-500/10 text-orange-400";
+      case "MEDIUM":
+        return "border-yellow-500/50 bg-yellow-500/10 text-yellow-400";
+      case "LOW":
+        return "border-blue-500/50 bg-blue-500/10 text-blue-400";
+      default:
+        return "border-gray-500/50 bg-gray-500/10 text-gray-400";
+    }
+  };
+
+  const getSeverityBadgeColor = (severity) => {
+    switch (severity) {
+      case "CRITICAL":
+        return "bg-red-500/20 border-red-500/30 text-red-400";
+      case "HIGH":
+        return "bg-orange-500/20 border-orange-500/30 text-orange-400";
+      case "MEDIUM":
+        return "bg-yellow-500/20 border-yellow-500/30 text-yellow-400";
+      case "LOW":
+        return "bg-blue-500/20 border-blue-500/30 text-blue-400";
+      default:
+        return "bg-gray-500/20 border-gray-500/30 text-gray-400";
+    }
+  };
+
+  const formatTimeAgo = (timestamp) => {
+    const now = new Date();
+    const alertTime = new Date(timestamp);
+    const diffMs = now - alertTime;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+
+    if (diffMins < 1) return "Just now";
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    // Use a fixed format that doesn't depend on locale settings
+    const month = alertTime.getMonth() + 1;
+    const day = alertTime.getDate();
+    const year = alertTime.getFullYear();
+    return `${month}/${day}/${year}`;
+  };
+
+  const getAlertTitle = (type) => {
+    switch (type) {
+      case "EXTREME_WIND_SPEED":
+        return "Extreme Solar Wind Speed";
+      case "HIGH_WIND_SPEED":
+        return "High Solar Wind Speed";
+      case "EXTREME_PARTICLE_FLUX":
+        return "Extreme Particle Flux";
+      case "HIGH_PARTICLE_FLUX":
+        return "High Particle Flux";
+      default:
+        return "System Alert";
+    }
+  };
+
+  const getRecommendation = (type, severity) => {
+    if (severity === "CRITICAL") {
+      switch (type) {
+        case "EXTREME_WIND_SPEED":
+          return "Immediate satellite protection protocols required. Consider orbital adjustments.";
+        case "EXTREME_PARTICLE_FLUX":
+          return "Activate radiation shielding. Monitor astronaut safety protocols.";
+        default:
+          return "Immediate action required. Follow emergency protocols.";
+      }
+    } else if (severity === "HIGH") {
+      switch (type) {
+        case "HIGH_WIND_SPEED":
+          return "Enhanced monitoring recommended. Prepare for potential CME impact.";
+        case "HIGH_PARTICLE_FLUX":
+          return "Monitor radiation levels. Consider protective measures.";
+        default:
+          return "Enhanced monitoring recommended.";
+      }
+    } else {
+      return "Continue monitoring. No immediate action required.";
     }
   };
 
   return (
     <div
-      className={`${colors.bg} ${colors.border} border rounded-lg p-4 backdrop-blur-sm transition-all duration-200 hover:scale-[1.02] ${colors.glow}`}
+      className={`p-4 rounded-lg border ${getSeverityColor(alert.severity)}`}
     >
-      <div className="flex items-start justify-between">
-        <div className="flex items-start space-x-3 flex-1">
-          <div
-            className={`w-10 h-10 ${colors.bg} rounded-lg flex items-center justify-center ${colors.icon}`}
-          >
-            {getSeverityIcon(severity)}
-          </div>
-
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center space-x-2 mb-1">
-              <h3 className="text-lg font-semibold text-white truncate">
-                {alert?.title || "CME Detection Alert"}
-              </h3>
-              <span
-                className={`px-2 py-1 text-xs font-medium rounded-full ${colors.bg} ${colors.text} uppercase tracking-wide`}
-              >
-                {severity}
-              </span>
-            </div>
-
-            <p className="text-gray-300 text-sm mb-2 line-clamp-2">
-              {alert?.description ||
-                "A Coronal Mass Ejection has been detected and is heading towards Earth."}
-            </p>
-
-            <div className="flex items-center space-x-4 text-xs text-gray-400">
-              <div className="flex items-center space-x-1">
-                <Clock className="w-3 h-3" />
-                <span>{formatTime(alert?.timestamp || Date.now())}</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <MapPin className="w-3 h-3" />
-                <span>{alert?.location || "Solar Region 1234"}</span>
-              </div>
-            </div>
+      <div className="flex items-start justify-between mb-3">
+        <div className="flex items-center space-x-3">
+          {getAlertIcon(alert.type)}
+          <div>
+            <h4 className="font-semibold text-white">
+              {getAlertTitle(alert.type)}
+            </h4>
+            <p className="text-sm text-slate-300">{alert.description}</p>
           </div>
         </div>
-
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="p-1 rounded-md text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+        <span
+          className={`text-xs px-2 py-1 rounded border ${getSeverityBadgeColor(
+            alert.severity
+          )}`}
         >
-          {isExpanded ? (
-            <ChevronUp className="w-4 h-4" />
-          ) : (
-            <ChevronDown className="w-4 h-4" />
-          )}
-        </button>
+          {alert.severity}
+        </span>
       </div>
 
-      {isExpanded && (
-        <div className="mt-4 pt-4 border-t border-white/10 space-y-3">
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div>
-              <p className="text-gray-400">Estimated Arrival</p>
-              <p className="text-white font-medium">
-                {alert?.estimatedArrival || "24-48 hours"}
-              </p>
-            </div>
-            <div>
-              <p className="text-gray-400">Speed</p>
-              <p className="text-white font-medium">
-                {alert?.speed || "800 km/s"}
-              </p>
-            </div>
-            <div>
-              <p className="text-gray-400">Intensity</p>
-              <p className="text-white font-medium">
-                {alert?.intensity || "G2 (Moderate)"}
-              </p>
-            </div>
-            <div>
-              <p className="text-gray-400">Source</p>
-              <p className="text-white font-medium">
-                {alert?.source || "Aditya-L1"}
-              </p>
-            </div>
-          </div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3 text-sm">
+        <div>
+          <span className="text-slate-400">Value:</span>
+          <span className="text-white font-medium ml-2">{alert.value}</span>
+        </div>
+        <div>
+          <span className="text-slate-400">Threshold:</span>
+          <span className="text-white font-medium ml-2">{alert.threshold}</span>
+        </div>
+        <div>
+          <span className="text-slate-400">Source:</span>
+          <span className="text-white font-medium ml-2">{alert.source}</span>
+        </div>
+        <div>
+          <span className="text-slate-400">Time:</span>
+          <span className="text-white font-medium ml-2">
+            {formatTimeAgo(alert.timestamp)}
+          </span>
+        </div>
+      </div>
 
+      <div className="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30">
+        <div className="flex items-start space-x-2">
+          <Activity className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
           <div>
-            <p className="text-gray-400 text-sm mb-2">Impact Assessment</p>
-            <p className="text-white text-sm">
-              {alert?.impactAssessment ||
-                "This CME may cause moderate geomagnetic storms. Satellite operators should monitor for potential communication disruptions. Power grid operators should be aware of possible voltage fluctuations."}
+            <span className="text-sm font-medium text-blue-400">
+              Recommendation:
+            </span>
+            <p className="text-sm text-slate-200 mt-1">
+              {getRecommendation(alert.type, alert.severity)}
             </p>
           </div>
-
-          <div className="flex items-center justify-between pt-2">
-            <div className="flex items-center space-x-2">
-              <span className="text-xs text-gray-400">Alert ID:</span>
-              <span className="text-xs text-white font-mono">
-                {alert?.id || "CME-2024-001"}
-              </span>
-            </div>
-            <button className="flex items-center space-x-1 px-3 py-1 bg-white/10 rounded-md text-sm text-white hover:bg-white/20 transition-colors">
-              <ExternalLink className="w-3 h-3" />
-              <span>Details</span>
-            </button>
-          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

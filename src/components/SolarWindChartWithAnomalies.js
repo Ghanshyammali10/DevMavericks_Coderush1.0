@@ -266,13 +266,19 @@ export default function SolarWindChartWithAnomalies({
   }
 
   if (error) {
+    const isFallbackData = error && (error.includes("fallback") || error.includes("Fallback"));
     return (
       <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6">
-        <div className="text-red-400 text-center">
+        <div className={`text-center ${isFallbackData ? "text-yellow-400" : "text-red-400"}`}>
           <p className="text-lg font-semibold mb-2">
-            Error Loading Solar Wind Data
+            {isFallbackData ? "Using Fallback Data" : "Error Loading Solar Wind Data"}
           </p>
           <p className="text-sm">{error}</p>
+          {isFallbackData && (
+            <p className="text-xs text-gray-300 mt-2">
+              SWPC connection unavailable. Displaying simulated data for demonstration.
+            </p>
+          )}
         </div>
       </div>
     );

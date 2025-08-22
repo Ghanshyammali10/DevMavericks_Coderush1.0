@@ -8,11 +8,10 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Area,
-  AreaChart,
+  Legend,
 } from "recharts";
 
-export default function SolarChart({ data }) {
+export default function MagnetometerChart({ data }) {
   // Transform data for the chart
   const chartData =
     data?.map((item, index) => ({
@@ -22,22 +21,27 @@ export default function SolarChart({ data }) {
         const minutes = date.getMinutes().toString().padStart(2, '0');
         return `${hours}:${minutes}`;
       })(),
-      windSpeed: item.windSpeed,
-      density: item.density,
-      temperature: item.temperature / 1000, // Convert to thousands for better display
-      magneticField: item.magneticField,
+      bx: item.bx,
+      by: item.by,
+      bz: item.bz,
+      totalField: item.totalField,
     })) || [];
 
   // Generate sample data if no real data
   if (chartData.length === 0) {
     for (let i = 23; i >= 0; i--) {
       const time = new Date(Date.now() - i * 60 * 60 * 1000);
+      const baseBx = (Math.random() - 0.5) * 10;
+      const baseBy = (Math.random() - 0.5) * 10;
+      const baseBz = -5 + (Math.random() - 0.5) * 10;
+      const totalField = Math.sqrt(baseBx*baseBx + baseBy*baseBy + baseBz*baseBz);
+      
       chartData.push({
         time: `${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`,
-        windSpeed: 400 + Math.random() * 200,
-        density: 5 + Math.random() * 10,
-        temperature: (100 + Math.random() * 200) / 1000,
-        magneticField: 5 + Math.random() * 15,
+        bx: parseFloat(baseBx.toFixed(2)),
+        by: parseFloat(baseBy.toFixed(2)),
+        bz: parseFloat(baseBz.toFixed(2)),
+        totalField: parseFloat(totalField.toFixed(2)),
       });
     }
   }
@@ -77,7 +81,7 @@ export default function SolarChart({ data }) {
             fontSize={12}
             tick={{ fill: "#94a3b8" }}
             label={{
-              value: "Solar Wind Speed (km/s)",
+              value: "Magnetic Field (nT)",
               angle: -90,
               position: "insideLeft",
               fill: "#94a3b8",
@@ -86,76 +90,57 @@ export default function SolarChart({ data }) {
           />
 
           <Tooltip content={<CustomTooltip />} />
+          <Legend />
 
-          {/* Primary metric: Wind Speed */}
+          {/* Bx component */}
           <Line
             type="monotone"
-            dataKey="windSpeed"
+            dataKey="bx"
             stroke="#3b82f6"
-            strokeWidth={3}
-            name="Wind Speed"
-            unit=" km/s"
-            dot={{ fill: "#3b82f6", strokeWidth: 2, r: 4 }}
-            activeDot={{ r: 6, stroke: "#3b82f6", strokeWidth: 2 }}
-          />
-
-          {/* Secondary metric: Density */}
-          <Line
-            type="monotone"
-            dataKey="density"
-            stroke="#10b981"
             strokeWidth={2}
-            name="Density"
-            unit=" p/cm³"
-            dot={{ fill: "#10b981", strokeWidth: 2, r: 3 }}
-            activeDot={{ r: 5, stroke: "#10b981", strokeWidth: 2 }}
-          />
-
-          {/* Temperature line */}
-          <Line
-            type="monotone"
-            dataKey="temperature"
-            stroke="#f59e0b"
-            strokeWidth={2}
-            strokeDasharray="5 5"
-            name="Temperature"
-            unit=" kK"
-            dot={false}
-          />
-
-          {/* Magnetic Field line */}
-          <Line
-            type="monotone"
-            dataKey="magneticField"
-            stroke="#8b5cf6"
-            strokeWidth={2}
-            strokeDasharray="3 3"
-            name="Magnetic Field"
+            name="Bx"
             unit=" nT"
             dot={false}
+            activeDot={{ r: 4 }}
+          />
+
+          {/* By component */}
+          <Line
+            type="monotone"
+            dataKey="by"
+            stroke="#10b981"
+            strokeWidth={2}
+            name="By"
+            unit=" nT"
+            dot={false}
+            activeDot={{ r: 4 }}
+          />
+
+          {/* Bz component */}
+          <Line
+            type="monotone"
+            dataKey="bz"
+            stroke="#f59e0b"
+            strokeWidth={2}
+            name="Bz"
+            unit=" nT"
+            dot={false}
+            activeDot={{ r: 4 }}
+          />
+
+          {/* Total field magnitude */}
+          <Line
+            type="monotone"
+            dataKey="totalField"
+            stroke="#ef4444"
+            strokeWidth={3}
+            name="Total Field"
+            unit=" nT"
+            dot={false}
+            activeDot={{ r: 4 }}
           />
         </LineChart>
       </ResponsiveContainer>
-
-      {/* Chart Legend */}
-      <div className="flex flex-wrap justify-center gap-4 mt-4 text-xs">
-        <div className="flex items-center space-x-2">
-          <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-          <span className="text-slate-300">Wind Speed</span>
-        </div>
-        <div className="flex items-center space-x-2">
-          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-          <span className="text-slate-300">Density</span>
-        </div>
-        <div className="flex items-center space-x-2">
-          <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-          <span className="text-slate-300">Temperature</span>
-        </div>
-        <div className="flex items-center space-x-2">
-          <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-          <span className="text-slate-300">Magnetic Field</span>
-        </div>
-      </div>
     </div>
   );
 }

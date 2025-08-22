@@ -51,20 +51,7 @@ export default function ApiStatusBanner({ message, type = "warning" }) {
           >
             {message}
           </p>
-          {isWarning && (
-            <p className="text-gray-300 text-xs mt-1">
-              NASA's DEMO_KEY has rate limits (30 requests/hour). For higher
-              limits, get a free API key at{" "}
-              <a
-                href="https://api.nasa.gov/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline hover:text-white"
-              >
-                api.nasa.gov
-              </a>
-            </p>
-          )}
+
         </div>
       </div>
     </div>

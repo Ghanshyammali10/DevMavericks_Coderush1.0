@@ -29,24 +29,24 @@ export default function CMEInsights({ events = [] }) {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
         <div className="p-3 bg-white/5 rounded">
           <div className="text-gray-400">Strength</div>
-          <div className="text-white font-medium">{strength.class}</div>
-          <div className="text-gray-500 text-xs">{strength.rationale}</div>
+          <div className="text-white font-medium truncate">{strength.class}</div>
+          <div className="text-gray-500 text-xs truncate">{strength.rationale}</div>
         </div>
         <div className="p-3 bg-white/5 rounded">
           <div className="text-gray-400">Direction</div>
-          <div className="text-white font-medium">
+          <div className="text-white font-medium truncate">
             {direction.directionLabel}
           </div>
-          <div className="text-gray-500 text-xs">
+          <div className="text-gray-500 text-xs truncate">
             lat {direction.latitude}, lon {direction.longitude}
           </div>
         </div>
         <div className="p-3 bg-white/5 rounded">
           <div className="text-gray-400">Forecast</div>
-          <div className="text-white font-medium">
+          <div className="text-white font-medium truncate">
             ETA ~{forecast.etaHours} h
           </div>
-          <div className="text-gray-500 text-xs">
+          <div className="text-gray-500 text-xs truncate">
             likelihood {Math.round(forecast.likelihood * 100)}%
           </div>
         </div>

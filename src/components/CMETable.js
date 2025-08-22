@@ -2,9 +2,71 @@
 
 import { AlertTriangle } from "lucide-react";
 
-export default function CMETable({ events = [], loading = false, onRefresh, error }) {
-  const isFallbackData = error && error.includes("fallback");
-  
+// Helper functions for handling NASA API data format
+function formatDate(dateString) {
+  if (!dateString) return "—";
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString; // Return original if invalid
+    
+    // Use a fixed format that doesn't depend on locale settings
+    // Format: MM/DD/YYYY, HH:MM:SS (24-hour format)
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const year = date.getFullYear();
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+    
+    return `${month}/${day}/${year}, ${hours}:${minutes}:${seconds}`;
+  } catch (e) {
+    return dateString; // Return original on error
+  }
+}
+
+function getLatitude(event) {
+  // Check all possible locations for latitude data
+  if (event.latitude !== undefined) return event.latitude;
+  if (event.coordinates?.latitude !== undefined)
+    return event.coordinates.latitude;
+  if (event.sourceLocation) {
+    // Try to parse from sourceLocation format like "N12E25"
+    const match = event.sourceLocation.match(/([NS])(\d+)/);
+    if (match) {
+      const value = parseInt(match[2]);
+      return match[1] === "N" ? value : -value;
+    }
+  }
+  return "—";
+}
+
+function getLongitude(event) {
+  // Check all possible locations for longitude data
+  if (event.longitude !== undefined) return event.longitude;
+  if (event.coordinates?.longitude !== undefined)
+    return event.coordinates.longitude;
+  if (event.sourceLocation) {
+    // Try to parse from sourceLocation format like "N12E25"
+    const match = event.sourceLocation.match(/([EW])(\d+)/);
+    if (match) {
+      const value = parseInt(match[2]);
+      return match[1] === "E" ? value : -value;
+    }
+  }
+  return "—";
+}
+
+export default function CMETable({
+  cmeEvents = [],
+  loading = false,
+  onRefresh,
+  error,
+}) {
+  // Convert NASA API data format to our expected format if needed
+  const events = Array.isArray(cmeEvents) ? cmeEvents : [];
+  const isFallbackData =
+    error && (error.includes("fallback") || error.includes("Fallback"));
+
   return (
     <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6">
       <div className="flex items-center justify-between mb-4">
@@ -22,15 +84,13 @@ export default function CMETable({ events = [], loading = false, onRefresh, erro
           {loading ? "Refreshing..." : "Refresh Data"}
         </button>
       </div>
-      
+
       {/* Fallback Data Warning */}
       {isFallbackData && (
         <div className="mb-4 p-3 bg-yellow-500/20 border border-yellow-500/30 rounded-lg">
           <div className="flex items-center gap-2">
             <AlertTriangle className="w-4 h-4 text-yellow-400" />
-            <p className="text-yellow-300 text-sm">
-              {error}
-            </p>
+            <p className="text-yellow-300 text-sm">{error}</p>
           </div>
         </div>
       )}
@@ -59,28 +119,36 @@ export default function CMETable({ events = [], loading = false, onRefresh, erro
             {events.map((e, idx) => (
               <tr key={idx} className="hover:bg-white/5">
                 <td className="px-3 py-2 whitespace-nowrap">
-                  {e.time21_5 || "—"}
+                  {formatDate(e.startTime || e.time21_5)}
                 </td>
-                <td className="px-3 py-2">{e.speed ?? "—"}</td>
-                <td className="px-3 py-2">{e.latitude ?? "—"}</td>
-                <td className="px-3 py-2">{e.longitude ?? "—"}</td>
-                <td className="px-3 py-2">{e.halfAngle ?? "—"}</td>
+                <td className="px-3 py-2">{e.speed || e.speedKmSec || "—"}</td>
+                <td className="px-3 py-2">{getLatitude(e)}</td>
+                <td className="px-3 py-2">{getLongitude(e)}</td>
+                <td className="px-3 py-2">
+                  {e.halfAngle || e.halfAngle || "—"}
+                </td>
                 <td className="px-3 py-2">
                   <span
                     className={`px-2 py-1 rounded text-xs ${
-                      e.isMostAccurate
+                      e.isMostAccurate ||
+                      e.catalog === "M2M_CATALOG" ||
+                      e.mostAccurateOnly === true
                         ? "bg-green-500/20 text-green-300 border border-green-500/30"
                         : "bg-yellow-500/20 text-yellow-300 border border-yellow-500/30"
                     }`}
                   >
-                    {e.isMostAccurate ? "Most Accurate" : "Estimate"}
+                    {e.isMostAccurate ||
+                    e.catalog === "M2M_CATALOG" ||
+                    e.mostAccurateOnly === true
+                      ? "Most Accurate"
+                      : "Estimate"}
                   </span>
                 </td>
                 <td
                   className="px-3 py-2 max-w-xs truncate"
-                  title={e.note || ""}
+                  title={e.note || e.activityID || ""}
                 >
-                  {e.note || ""}
+                  {e.note || e.activityID || ""}
                 </td>
               </tr>
             ))}

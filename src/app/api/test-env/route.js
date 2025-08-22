@@ -1,8 +1,8 @@
 export async function GET() {
   return new Response(
     JSON.stringify({
-      nasa_api_key: process.env.NASA_API_KEY || 'Not found',
-      public_key: process.env.NEXT_PUBLIC_NASA_API_KEY || 'Not found'
+      nasa_api_key: process.env.NASA_API_KEY,
+      public_key: process.env.NASA_API_KEY
     }),
     {
       status: 200,

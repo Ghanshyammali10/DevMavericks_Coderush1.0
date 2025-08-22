@@ -62,11 +62,8 @@ export async function GET(request) {
       );
     }
 
-    // Prefer private server env; fallback to public env; finally NASA DEMO_KEY for convenience
-    const apiKey =
-      process.env.NASA_API_KEY ||
-      process.env.NEXT_PUBLIC_NASA_API_KEY ||
-      "DEMO_KEY";
+    // Use the provided NASA API key
+    const apiKey = "Kh3ZBA6vKM64DmdJ6z5n2k0gXJ1V96nGpquWq9Uz";
 
     // Check if we've hit the API recently to avoid rate limiting
     const cacheKey = `nasa_api_last_call_${startDate}_${endDate}`;
@@ -74,29 +71,42 @@ export async function GET(request) {
     const now = Date.now();
     const timeSinceLastCall = now - lastCallTime;
 
-    // If we've called the API in the last 5 seconds, use cached data to avoid rate limiting
-    // DEMO_KEY is limited to 30 requests per hour / 50 per day
-    if (apiKey === "DEMO_KEY" && timeSinceLastCall < 5000) {
-      console.log("Using fallback data to avoid NASA API rate limiting");
-      const fallbackEvents = generateFallbackCMEData();
-      return new Response(
-        JSON.stringify({
-          params: {
-            startDate,
-            endDate,
-            mostAccurateOnly: String(mostAccurateOnly),
-            speed: String(speed),
-            halfAngle: String(halfAngle),
-            catalog,
-          },
-          count: fallbackEvents.length,
-          events: fallbackEvents,
-          isFallback: true,
-          source: "FALLBACK_RATE_LIMIT",
-          error: "Rate limiting protection active - try again in a few seconds",
-        }),
-        { status: 200, headers: { "Content-Type": "application/json" } }
-      );
+    // Even with a real API key, we should still avoid excessive calls
+    // NASA API key has higher limits (1000 requests per hour)
+    if (timeSinceLastCall < 1000) { // Reduced to 1 second to avoid hammering the API
+      console.log("Using cached data to avoid NASA API rate limiting");
+      
+      // Check if we have a cached response that's still valid
+      const responseCacheKey = `nasa_api_response_${startDate}_${endDate}`;
+      const cachedResponse = global[responseCacheKey];
+      
+      if (cachedResponse && cachedResponse.expiresAt > Date.now()) {
+        console.log("Using cached NASA API response");
+        return new Response(
+          JSON.stringify({
+            params: {
+              startDate,
+              endDate,
+              mostAccurateOnly: String(mostAccurateOnly),
+              speed: String(speed),
+              halfAngle: String(halfAngle),
+              catalog,
+            },
+            count: cachedResponse.data.length,
+            events: cachedResponse.data,
+            isFallback: false,
+            source: "NASA_DONKI_CACHED",
+            cachedAt: new Date(cachedResponse.timestamp).toISOString(),
+          }),
+          {
+            status: 200,
+            headers: {
+              "Content-Type": "application/json",
+              "Cache-Control": "no-cache, no-store, must-revalidate",
+            },
+          }
+        );
+      }
     }
 
     // Update the last call time
@@ -144,10 +154,7 @@ export async function GET(request) {
     url.searchParams.set("api_key", apiKey);
 
     try {
-      console.log(
-        "Calling NASA DONKI API with key:",
-        apiKey === "DEMO_KEY" ? "DEMO_KEY" : "[CUSTOM KEY]"
-      );
+      console.log("Calling NASA DONKI API with custom key");
 
       const res = await fetch(url.toString(), {
         next: { revalidate: 0 },

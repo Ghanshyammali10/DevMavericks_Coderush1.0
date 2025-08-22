@@ -179,101 +179,623 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Link
-              href="/alerts"
-              className="group block bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6 hover:scale-105 transition-transform duration-200"
-            >
-              <div className="w-12 h-12 bg-gradient-to-r from-sky-400 to-blue-500 rounded-lg flex items-center justify-center mb-4">
-                <Plane className="w-6 h-6 text-white" />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Airlines & Aviation */}
+            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-sky-400 to-blue-500 rounded-lg flex items-center justify-center mr-4">
+                  <Plane className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-white">
+                    Airlines & Aviation
+                  </h3>
+                  <p className="text-gray-400 text-sm">
+                    Flight safety & navigation systems
+                  </p>
+                </div>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-1">
-                Airlines & Aviation
-              </h3>
-              <p className="text-gray-300">
-                HF comms, GNSS deviations, polar route advisories, radiation
-                dose management.
-              </p>
-              <div className="mt-3 text-sm text-gray-400">
-                Dispatch · ATC · Flight Ops
-              </div>
-            </Link>
 
-            <Link
-              href="/alerts"
-              className="group block bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6 hover:scale-105 transition-transform duration-200"
-            >
-              <div className="w-12 h-12 bg-gradient-to-r from-cyan-400 to-teal-500 rounded-lg flex items-center justify-center mb-4">
-                <Ship className="w-6 h-6 text-white" />
+              <div className="space-y-3 mb-4">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">✈</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Polar Route Risk Alerts
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Warns pilots to avoid high-latitude paths during solar
+                      radiation spikes
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">🛰</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      GPS Reliability Forecasts
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Predicts navigation accuracy for autopilot systems
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">☢</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Radiation Exposure Index
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Assesses crew/passenger exposure risk during high-altitude
+                      flights
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">📡</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Communication Disruption Alerts
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Flags potential radio blackout zones
+                    </div>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-1">
-                Navy & Maritime Operations
-              </h3>
-              <p className="text-gray-300">
-                HF/VHF comms, navigation drifts, Arctic passages, port
-                scheduling risk.
-              </p>
-              <div className="mt-3 text-sm text-gray-400">
-                Fleet Ops · Coastal SAR
-              </div>
-            </Link>
 
-            <Link
-              href="/alerts"
-              className="group block bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6 hover:scale-105 transition-transform duration-200"
-            >
-              <div className="w-12 h-12 bg-gradient-to-r from-lime-400 to-green-500 rounded-lg flex items-center justify-center mb-4">
-                <Sprout className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-1">
-                Agriculture & Farming
-              </h3>
-              <p className="text-gray-300">
-                GNSS guidance reliability, irrigation automation alerts,
-                weather‑linked advisories.
-              </p>
-              <div className="mt-3 text-sm text-gray-400">
-                Precision Ag · Extension
-              </div>
-            </Link>
+              <Link
+                href="/api/aviation"
+                className="inline-flex items-center text-blue-400 hover:text-blue-300 text-sm font-medium"
+              >
+                View Aviation API <ArrowRight className="w-4 h-4 ml-1" />
+              </Link>
+            </div>
 
-            <Link
-              href="/alerts"
-              className="group block bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6 hover:scale-105 transition-transform duration-200"
-            >
-              <div className="w-12 h-12 bg-gradient-to-r from-rose-400 to-pink-500 rounded-lg flex items-center justify-center mb-4">
-                <Hospital className="w-6 h-6 text-white" />
+            {/* Navy & Maritime Operations */}
+            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-cyan-400 to-teal-500 rounded-lg flex items-center justify-center mr-4">
+                  <Ship className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-white">
+                    Navy & Maritime Operations
+                  </h3>
+                  <p className="text-gray-400 text-sm">
+                    Marine navigation & communications
+                  </p>
+                </div>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-1">
-                Healthcare & Emergency Services
-              </h3>
-              <p className="text-gray-300">
-                Paging/comms resilience, ambulance navigation, satellite
-                backhaul continuity.
-              </p>
-              <div className="mt-3 text-sm text-gray-400">
-                EMS · Public Safety
-              </div>
-            </Link>
 
-            <Link
-              href="/alerts"
-              className="group block bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6 hover:scale-105 transition-transform duration-200"
-            >
-              <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center mb-4">
-                <Plug className="w-6 h-6 text-white" />
+              <div className="space-y-3 mb-4">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">📶</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Underwater Comms Risk Forecast
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Predicts CME-induced interference in sonar and underwater
+                      comms
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">🧭</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Navigation Accuracy Alerts
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Helps reroute vessels during GPS degradation
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">🌊</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Oceanic Weather-CME Fusion Models
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Combines CME data with marine forecasts for safer routing
+                    </div>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-1">
-                Energy Sector (Solar · Grid · Nuclear)
-              </h3>
-              <p className="text-gray-300">
-                Geomagnetically induced currents, grid protection advisories,
-                plant ops coordination.
-              </p>
-              <div className="mt-3 text-sm text-gray-400">
-                ISO/RTO · Utilities
+
+              <Link
+                href="/api/maritime"
+                className="inline-flex items-center text-cyan-400 hover:text-cyan-300 text-sm font-medium"
+              >
+                View Maritime API <ArrowRight className="w-4 h-4 ml-1" />
+              </Link>
+            </div>
+
+            {/* Agriculture & Farming */}
+            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-lime-400 to-green-500 rounded-lg flex items-center justify-center mr-4">
+                  <Sprout className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-white">
+                    Agriculture & Farming
+                  </h3>
+                  <p className="text-gray-400 text-sm">
+                    Precision farming & crop management
+                  </p>
+                </div>
               </div>
-            </Link>
+
+              <div className="space-y-3 mb-4">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">🌦</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Rainfall Anomaly Predictor
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Uses CME data to forecast drought or flood risk
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">🚜</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Machinery Disruption Alerts
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Warns of GPS or automation failures in smart tractors
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">🐛</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Pest & Disease Risk Index
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Predicts outbreaks based on UV and temperature shifts
+                      post-CME
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <Link
+                href="/api/agriculture"
+                className="inline-flex items-center text-green-400 hover:text-green-300 text-sm font-medium"
+              >
+                View Agriculture API <ArrowRight className="w-4 h-4 ml-1" />
+              </Link>
+            </div>
+
+            {/* Healthcare & Emergency Services */}
+            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-rose-400 to-pink-500 rounded-lg flex items-center justify-center mr-4">
+                  <Hospital className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-white">
+                    Healthcare & Emergency Services
+                  </h3>
+                  <p className="text-gray-400 text-sm">
+                    Medical systems & emergency response
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-3 mb-4">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">⚡</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Medical Equipment Surge Alerts
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Warns hospitals of power instability risks
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">🚑</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Ambulance GPS Reliability Tracker
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Ensures accurate routing during geomagnetic storms
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">🧯</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Emergency Response Optimization
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Prioritizes zones based on CME impact severity
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <Link
+                href="/api/healthcare"
+                className="inline-flex items-center text-pink-400 hover:text-pink-300 text-sm font-medium"
+              >
+                View Healthcare API <ArrowRight className="w-4 h-4 ml-1" />
+              </Link>
+            </div>
+
+            {/* Construction & Infrastructure */}
+            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-lg flex items-center justify-center mr-4">
+                  <span className="text-2xl">🏗</span>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-white">
+                    Construction & Infrastructure
+                  </h3>
+                  <p className="text-gray-400 text-sm">
+                    Building & infrastructure safety
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-3 mb-4">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">🏗</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Precision Equipment Risk Alerts
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Flags days when GPS-guided cranes or survey tools may fail
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">🔌</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Grid Surge Forecasts
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Predicts transformer overload risks at construction sites
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">📦</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Logistics Planning Assistant
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Suggests optimal material delivery windows
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <Link
+                href="/api/construction"
+                className="inline-flex items-center text-yellow-400 hover:text-yellow-300 text-sm font-medium"
+              >
+                View Construction API <ArrowRight className="w-4 h-4 ml-1" />
+              </Link>
+            </div>
+
+            {/* Telecom & Internet Providers */}
+            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-indigo-400 to-purple-500 rounded-lg flex items-center justify-center mr-4">
+                  <Satellite className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-white">
+                    Telecom & Internet Providers
+                  </h3>
+                  <p className="text-gray-400 text-sm">
+                    Network reliability & performance
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-3 mb-4">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">📉</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Signal Degradation Predictor
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Forecasts CME-induced drops in satellite and fiber
+                      performance
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">🛠</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Maintenance Crew Alert System
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Sends preemptive alerts for outage-prone zones
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">🔄</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      AI-Driven Network Rerouting
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Suggests alternate paths to maintain service continuity
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <Link
+                href="/api/telecom"
+                className="inline-flex items-center text-purple-400 hover:text-purple-300 text-sm font-medium"
+              >
+                View Telecom API <ArrowRight className="w-4 h-4 ml-1" />
+              </Link>
+            </div>
+
+            {/* Financial Institutions */}
+            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-emerald-400 to-green-500 rounded-lg flex items-center justify-center mr-4">
+                  <span className="text-2xl">🏦</span>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-white">
+                    Financial Institutions
+                  </h3>
+                  <p className="text-gray-400 text-sm">
+                    Trading systems & risk management
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-3 mb-4">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">⏱</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Latency Forecast for Trading Systems
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Warns of timing disruptions in high-frequency trading
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">🔋</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Server Farm Surge Protection Alerts
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Helps data centers prepare for geomagnetic spikes
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">📊</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Risk Modeling Dashboard
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Assesses CME impact on insurance, investment, and
+                      infrastructure portfolios
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <Link
+                href="/api/finance"
+                className="inline-flex items-center text-green-400 hover:text-green-300 text-sm font-medium"
+              >
+                View Finance API <ArrowRight className="w-4 h-4 ml-1" />
+              </Link>
+            </div>
+
+            {/* Energy Sector */}
+            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center mr-4">
+                  <Plug className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-white">
+                    Energy Sector (Solar, Grid, Nuclear)
+                  </h3>
+                  <p className="text-gray-400 text-sm">
+                    Power generation & distribution
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-3 mb-4">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">⚡</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Transformer Overload Predictor
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Warns grid operators of CME-induced current spikes
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">☀</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Solar Panel Efficiency Tracker
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Adjusts output expectations based on radiation changes
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">🔄</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Smart Load Balancing Assistant
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Recommends energy redistribution during instability
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <Link
+                href="/api/energy"
+                className="inline-flex items-center text-orange-400 hover:text-orange-300 text-sm font-medium"
+              >
+                View Energy API <ArrowRight className="w-4 h-4 ml-1" />
+              </Link>
+            </div>
+
+            {/* Space Agencies & Satellite Operators */}
+            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-violet-400 to-purple-500 rounded-lg flex items-center justify-center mr-4">
+                  <span className="text-2xl">🛰</span>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-white">
+                    Space Agencies & Satellite Operators
+                  </h3>
+                  <p className="text-gray-400 text-sm">
+                    Spacecraft safety & operations
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-3 mb-4">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">🛰</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Satellite Shielding Alerts
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Notifies operators to activate protective protocols
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">🚀</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Launch Window Optimization
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Suggests safe periods for rocket launches
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">📡</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Trajectory Disruption Forecasts
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Predicts orbital drift or control issues
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <Link
+                href="/api/space"
+                className="inline-flex items-center text-purple-400 hover:text-purple-300 text-sm font-medium"
+              >
+                View Space API <ArrowRight className="w-4 h-4 ml-1" />
+              </Link>
+            </div>
+
+            {/* Students & Educational Institutions */}
+            <div className="bg-black/20 backdrop-blur-md border border-white/10 rounded-xl p-6">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-lg flex items-center justify-center mr-4">
+                  <span className="text-2xl">🎓</span>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-white">
+                    Students & Educational Institutions
+                  </h3>
+                  <p className="text-gray-400 text-sm">
+                    Learning & research tools
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-3 mb-4">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">📊</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Interactive CME Dashboards
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Real-time data for physics, astronomy, and earth science
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">🌌</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      Aurora Visibility Alerts
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Great for observational learning and field trips
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">🧪</span>
+                  <div>
+                    <div className="text-white font-medium">
+                      STEM Project Simulators
+                    </div>
+                    <div className="text-gray-400 text-sm">
+                      Lets students model CME effects on real-world systems
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <Link
+                href="/api/education"
+                className="inline-flex items-center text-indigo-400 hover:text-indigo-300 text-sm font-medium"
+              >
+                View Education API <ArrowRight className="w-4 h-4 ml-1" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
