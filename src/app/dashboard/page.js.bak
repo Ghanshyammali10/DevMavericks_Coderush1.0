@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
 import {
   Activity,
   AlertTriangle,
@@ -26,6 +25,7 @@ import AdityaL1Monitor from "@/components/AdityaL1Monitor";
 import NasaApiStatus from "@/components/NasaApiStatus";
 // LiveAlertSystem and ISROIntegration imports removed
 import { adityaL1Simulator } from "@/lib/aditya-l1/simulator";
+import Navbar from "@/components/Navbar";
 
 // Client-side only component to prevent hydration issues
 function ClientOnly({ children }) {
@@ -288,31 +288,6 @@ export default function Dashboard() {
     const seconds = date.getSeconds().toString().padStart(2, "0");
     return `${hours}:${minutes}:${seconds}`;
   };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-slate-800/50 to-slate-700/50 backdrop-blur-md border-b border-slate-600/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link href="/" className="inline-flex items-center text-sm text-gray-400 hover:text-white mb-4 transition-colors">
-            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Back to Home
-          </Link>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
-                <Satellite className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-white">
-                  SolarFlux Dashboard
-                </h1>
-                <p className="text-slate-300">
-                  Real-time Aditya-L1 CME Detection & Monitoring
-                </p>
-              </div>
             </div>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
